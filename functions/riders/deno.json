@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "strict": true
+  },
+  "imports": {
+    "@core/": "../../src/packages/core/",
+    "@features/": "../../src/packages/features/"
+  }
+}

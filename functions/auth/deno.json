@@ -1,0 +1,6 @@
+{
+  "imports": {
+    "@core/": "../../src/packages/core/",
+    "@features/": "../../src/packages/features/"
+  }
+}
