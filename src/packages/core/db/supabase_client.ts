@@ -3,7 +3,7 @@ import {
   SupabaseClient,
 } from "https://esm.sh/@supabase/supabase-js@2";
 
-let client: SupabaseClient | null = null;
+let client: SupabaseClient | null;
 export function getSupabaseAnonClient(accessToken?: string): SupabaseClient {
   if (client && !accessToken) return client;
   const _client = createClient(

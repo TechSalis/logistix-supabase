@@ -1,19 +1,34 @@
 import { ValidatorResponse } from "../types.ts";
 
-export default function validateCoordinates(lat: unknown, lng: unknown): ValidatorResponse {
-    let errorMessage = '';
+export default function validateCoordinates(
+    lat: unknown,
+    lng: unknown,
+): ValidatorResponse {
+    let errorMessage = "";
     if (!lat) {
-        errorMessage += 'Latitude is required.';
+        errorMessage += "Latitude is required.";
     }
     if (!lng) {
-        errorMessage += ' Longitude is required.';
+        errorMessage += " Longitude is required.";
     }
-    if ( typeof lng !== 'number' || lng < -180 || lng > 180) {
-        errorMessage += 'Invalid Latitude. Must be a number';
+
+    try {
+        const lngFloat = Number.parseFloat(lng as string);
+        if (lngFloat < -180 || lngFloat > 180) {
+            errorMessage += " Invalid Longitude.";
+        }
+    } catch (_) {
+        errorMessage += " Invalid Longitude.";
     }
-    if ( typeof lat !== 'number' || lat < -90 || lat > 90) {
-        errorMessage += 'Invalid Longitude. Must be a number';
+    try {
+        const latFloat = Number.parseFloat(lat as string);
+        if (latFloat < -180 || latFloat > 180) {
+            errorMessage += " Invalid Latitude.";
+        }
+    } catch (_) {
+        errorMessage += " Invalid Latitude.";
     }
+    
     if (errorMessage.length > 0) return { valid: false, error: errorMessage };
     return { valid: true };
 }

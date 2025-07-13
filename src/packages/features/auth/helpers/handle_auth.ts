@@ -25,6 +25,7 @@ export async function handleAuth(
         password: password as string,
         role: role as UserRole,
     });
+    
     const response = handleAuthResponse({
         user: authService.user,
         session: authService.session,
@@ -33,13 +34,13 @@ export async function handleAuth(
     return response || internalServerError();
 }
 
-function handleAuthResponse(auth: {
+export function handleAuthResponse(auth: {
     user: Record<string, unknown> | undefined;
     session?: Record<string, unknown> | undefined;
     error: AuthError | null;
 }) {
     if (auth.error) {
-        return new Response(auth.error.code as string, {
+        return new Response(auth.error.message as string, {
             status: auth.error.status as number,
         });
     }

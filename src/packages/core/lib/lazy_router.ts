@@ -1,6 +1,8 @@
+import { Method } from "../utils/types.ts";
+
 export type RouteParams = {
-  path: Record<string, string | undefined>;
-  query?: Record<string, string | undefined>;
+  pathParams: { [key: string]: string };
+  queryParams?: { [key: string]: string };
 };
 
 type AsyncHandler = (
@@ -8,67 +10,57 @@ type AsyncHandler = (
   params: RouteParams,
 ) => Promise<Response>;
 
-type RouteEntry = {
-  method: string;
-  path: string;
-  handler: AsyncHandler;
-};
 
 export class LazyRouter {
-  private routePrefix?: string;
-  constructor(routePrefix?: string) {
-    this.routePrefix = routePrefix;
+  private pathPrefix: string;
+  private routes: {
+    method: Method;
+    path: string;
+    handler: AsyncHandler;
+  }[] = [];
+
+  constructor(pathPrefix: string) {
+    this.pathPrefix = pathPrefix;
   }
 
-  private routes: RouteEntry[] = [];
-
-  on(method: string, path: string, handler: AsyncHandler) {
-    this.routes.push({
-      method: method.toUpperCase(),
-      path: path,
-      handler: handler,
-    });
+  on(method: Method, path: string, handler: AsyncHandler) {
+    this.routes.push({ method, path, handler });
   }
 
-  async route(request: Request): Promise<Response | undefined> {
+  async route(request: Request): Promise<Response | null> {
+    const { method, url } = request;
+    const { pathname, search } = new URL(url);
+
     for (const route of this.routes) {
-      if (route.method === request.method.toUpperCase()) {
-        const [path, search] = route.path.split("?");
-
-        const pathPattern = new URLPattern({
-          pathname: this.routePrefix + path,
-        });
-        const match = pathPattern.exec(request.url);
+      if (route.method === method) {
+        const fullPath = `${this.pathPrefix}${route.path}`;
+        const pathPattern = new RegExp(`^${fullPath}$`);
+        const match = pathPattern.exec(pathname);
 
         if (match) {
-          console.log(
+             console.log(
             request.method,
             request.url,
             "->",
             route.method,
             route.path,
             "=",
-            match.pathname,
+            match,
           );
-
-          const pathParams = match.pathname.groups;
-
-          let queryParams: Record<string, string | undefined> | undefined;
-          if (search) {
-            const searchPattern = new URLPattern({ search });
-            const match = searchPattern.exec(request.url);
-
-            console.log("Search params:", match?.search);
-            queryParams = match?.search.groups;
+          const pathParams: { [key: string]: string } = {};
+          for (const key in match.groups) {
+            pathParams[key] = match.groups[key];
           }
-          const params: RouteParams = {
-            path: pathParams,
-            query: queryParams,
-          };
 
-          return await route.handler(request, params);
+          const queryParams: { [key: string]: string } | undefined = search
+            ? Object.fromEntries(new URLSearchParams(search).entries())
+            : undefined;
+
+          return await route.handler(request, { pathParams, queryParams });
         }
       }
     }
+
+    return null;
   }
 }

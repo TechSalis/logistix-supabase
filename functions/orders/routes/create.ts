@@ -4,14 +4,13 @@ import { CreateOrder } from "@features/orders/types.ts";
 import validateCreateOrderParams from "@features/orders/validators/create_order_validator.ts";
 import { handleRequest } from "@core/lib/handle_request.ts";
 
-export const urlPathPattern = '';
-
+export const urlPathPattern = "";
 export default handleRequest(async ({ req, userId, token }) => {
+  let json: CreateOrder;
   try {
-    // eslint-disable-next-line no-var
-    var json = await req.json() as CreateOrder;
+    json = await req.json() as CreateOrder;
   } catch (err) {
-    console.error(urlPathPattern, 'Request.json() failed:', err);
+    console.error(urlPathPattern, ".json() failed:", err);
     return badRequest();
   }
 
@@ -22,7 +21,14 @@ export default handleRequest(async ({ req, userId, token }) => {
 
   try {
     const response = await createOrder(userId, token, json);
-    return new Response(JSON.stringify(response.data ?? 'Success'), { status: response.status });
+    return new Response(
+      JSON.stringify(
+        response.error ? response.error : response.data ?? "Success",
+      ),
+      {
+        status: response.status,
+      },
+    );
   } catch (err) {
     console.error(urlPathPattern, "error:", err);
     return internalServerError();

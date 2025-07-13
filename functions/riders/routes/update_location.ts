@@ -8,7 +8,7 @@ export default handleRequest(async ({ req }) => {
     try {
         var { lat, lng } = await req.json() as Record<string, unknown>;
     } catch (err) {
-        console.error(urlPathPattern, 'Request.json() failed:', err);
+        console.error(urlPathPattern, '.json() failed:', err);
         return badRequest();
     }
 

@@ -1,13 +1,13 @@
 import { badRequest, internalServerError } from "@core/functions/http.ts";
-import { uuidRegex } from "@core/utils/validators/uuid_validator.ts";
-import {
-  getOrderById,
-  getOrderByRefNumber,
-} from "@features/orders/services/order_service.ts";
 import { handleRequest } from "@core/lib/handle_request.ts";
 import validateOrderId from "@core/utils/validators/order_id_validator.ts";
+import {
+  cancelOrderById,
+  cancelOrderByRefNumber,
+} from "@features/orders/services/order_service.ts";
+import { uuidRegex } from "@core/utils/validators/uuid_validator.ts";
 
-export const urlPathPattern = "/get/:orderId";
+export const urlPathPattern = "/cancel/:orderId";
 export default handleRequest(async ({ token, params }) => {
   try {
     const orderId = params.pathParams.orderId!;
@@ -18,8 +18,8 @@ export default handleRequest(async ({ token, params }) => {
     }
 
     const response = uuidRegex.test(orderId)
-      ? await getOrderById(orderId, token)
-      : await getOrderByRefNumber(orderId, token);
+      ? await cancelOrderById(orderId, token)
+      : await cancelOrderByRefNumber(orderId, token);
 
     if (response.error) {
       return new Response(JSON.stringify(response.error), {
@@ -27,11 +27,7 @@ export default handleRequest(async ({ token, params }) => {
       });
     }
 
-    if (response.data.length == 0) {
-      return new Response("Order not found", { status: 404 });
-    }
-
-    return new Response(JSON.stringify(response.data[0]), {
+    return new Response(JSON.stringify(response.data), {
       status: response.status,
     });
   } catch (err) {

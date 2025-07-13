@@ -6,7 +6,7 @@ const router = new LazyRouter('/riders');
 
 /// Consider sorting Alphabetically and utilizing a better-than-linear search algorithm
 
-router.on('POST', findNearestRiderPattern, async (req, params) => {
+router.on('GET', findNearestRiderPattern, async (req, params) => {
     const createOrder = await import('./routes/find_nearest_rider.ts');
     return createOrder.default.request(req, params);
 });

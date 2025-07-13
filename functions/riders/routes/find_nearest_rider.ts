@@ -2,27 +2,36 @@ import { handleRequest } from "@core/lib/handle_request.ts";
 import { badRequest, internalServerError } from "@core/functions/http.ts";
 import validateCoordinates from "@core/utils/validators/coordinates_validator.ts";
 import { Coordinates } from "@core/utils/types.ts";
-import { findNearestRider } from "@features/riders/services/riders_service.ts";
+import { findNearestRiders } from "@features/riders/services/riders_service.ts";
 
-export const urlPathPattern = "/find-nearest?lat=:lat&lng=:lng";
+export const urlPathPattern = "/find/nearest";
 
+//?lat=:lat&lng=:lng"
 export default handleRequest(async ({ params, token }) => {
-  const validation = validateCoordinates(params.query?.lat, params.query?.lng);
+  const validation = validateCoordinates(
+    params.queryParams?.lat,
+    params.queryParams?.lng,
+  );
   if (!validation.valid) {
     return badRequest(validation.error);
   }
 
   const coordinates: Coordinates = {
-    lat: Number(params.query!.lat),
-    lng: Number(params.query!.lng),
+    lat: Number(params.queryParams!.lat),
+    lng: Number(params.queryParams!.lng),
   };
   try {
-    const rider = await findNearestRider(coordinates, token);
-    return rider
-      ? new Response(JSON.stringify(rider), { status: 200 })
-      : internalServerError();
+    const { riders, error } = await findNearestRiders(
+      coordinates,
+      token,
+      Number(params.queryParams?.count ?? 1),
+    );
+
+    if (riders) return new Response(JSON.stringify(riders), { status: 200 });
+    console.error("findNearestRider RPC failed:", error);
+    if (error) return internalServerError(error.message);
   } catch (err) {
     console.error("findNearestRider RPC failed:", err);
-    return internalServerError();
   }
+  return internalServerError();
 });
