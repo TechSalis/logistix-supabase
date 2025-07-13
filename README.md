@@ -2,6 +2,8 @@
 
 ## Terminal Commands
 
+- mkdir -p supabase/src/core/db && supabase gen types > src/core/db/database.types.ts
+
 ## Considerations
 
 - Using more efficient search algorithms in routing to endpoints

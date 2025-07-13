@@ -4,7 +4,7 @@
     "strict": true
   },
   "imports": {
-    "@core/": "../../src/packages/core/",
-    "@features/": "../../src/packages/features/"
+    "@core/": "../../src/core/",
+    "@features/": "../../src/features/"
   }
 }
