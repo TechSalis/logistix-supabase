@@ -15,7 +15,7 @@ export async function findNearestRiders(
   count: number = 1,
 ): Promise<{ riders?: Rider[], error?: PostgrestError }> {
   const { data, error } = await getSupabaseAnonClient(token).rpc(
-    "find_nearest_riders",
+    "fn_find_nearest_riders",
     {
       user_lat: userCoordinates.lat,
       user_lng: userCoordinates.lng,

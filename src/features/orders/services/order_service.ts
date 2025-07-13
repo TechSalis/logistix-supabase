@@ -30,7 +30,6 @@ export async function getOrders(
 
   if (userId) query = query.eq("user_id", userId);
   if (orderTypes && orderTypes?.length > 0) {
-    console.log("order types:", orderTypes);
     query = query.in("order_type", orderTypes);
   }
   return await query;

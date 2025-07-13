@@ -1,5 +1,3 @@
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-
 import { urlPathPattern as authSignupPattern } from "./routes/sign_up_email.ts";
 import { urlPathPattern as authLoginPattern } from "./routes/log_in_email.ts";
 import { urlPathPattern as authAnonymousLogin } from "./routes/log_in_anonymous.ts";

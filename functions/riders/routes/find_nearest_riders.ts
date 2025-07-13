@@ -4,7 +4,7 @@ import validateCoordinates from "@core/utils/validators/coordinates_validator.ts
 import { Coordinates } from "@core/utils/types.ts";
 import { findNearestRiders } from "@features/riders/services/riders_service.ts";
 
-export const urlPathPattern = "/find/nearest";
+export const urlPathPattern = "/nearest";
 
 //?lat=:lat&lng=:lng"
 export default handleRequest(async ({ params, token }) => {
@@ -28,7 +28,6 @@ export default handleRequest(async ({ params, token }) => {
     );
 
     if (riders) return new Response(JSON.stringify(riders), { status: 200 });
-    console.error("findNearestRider RPC failed:", error);
     if (error) return internalServerError(error.message);
   } catch (err) {
     console.error("findNearestRider RPC failed:", err);

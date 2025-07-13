@@ -7,7 +7,6 @@ export const urlPathPattern = "";
 
 //?page=:page&count=:count&order_types=:orderTypes
 export default handleRequest(async ({ token, params }) => {
-  console.log(params);
   try {
     const { page, count, orderTypes } = extractGetOrdersParams(params);
     if (page === undefined || count === undefined) {

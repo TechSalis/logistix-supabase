@@ -1,4 +1,4 @@
-import { AuthError } from "https://esm.sh/@supabase/auth-js@2.70.0/dist/module/index.d.ts";
+import { AuthError } from "https://esm.sh/@supabase/auth-js@2.70.0/dist/module/lib/errors.js";
 import { getSupabaseAnonClient } from "../../../core/db/supabase_client.ts";
 import { UserRole } from "../../../core/db/types.ts";
 import { UserMetadata } from "../helpers/auth_interface.ts";
@@ -6,8 +6,10 @@ import { UserMetadata } from "../helpers/auth_interface.ts";
 export type LoginParams = {
     email: string;
     password: string;
-    role?: UserRole;
 };
+export type SignUpParams = {
+    role: UserRole;
+} & LoginParams;
 
 export type LoginResponse = {
     user: Record<string, unknown> | undefined;
@@ -17,55 +19,45 @@ export type LoginResponse = {
 
 export async function loginAnonymously(): Promise<LoginResponse> {
     const response = await getSupabaseAnonClient().auth.signInAnonymously({
-        options: { data: { role: "customer" as UserRole } },
+        options: { data: { role: "customer" as unknown as UserRole } },
     });
 
     return {
         error: response.error,
-        user: response.data.user == null
-            ? undefined
-            : { ...response.data.user },
-        session: response.data.session == null
-            ? undefined
-            : { ...response.data.session },
+        user: response.data.user,
+        session: response.data.session,
     };
 }
 
 export async function upgradeAnonymousUser(
-    login: LoginParams,
+    params: SignUpParams,
+    data?: UserMetadata,
 ): Promise<LoginResponse> {
     const response = await getSupabaseAnonClient().auth.updateUser({
-        email: login.email,
-        password: login.password,
+        email: params.email,
+        password: params.password,
+        options: { data: { ...data, role: params.role } },
     });
     return {
         error: response.error,
-        user: response.data.user == null
-            ? undefined
-            : { ...response.data.user },
+        user: response.data.user,
     };
 }
 
 export async function signupWithPassword(
-    login: LoginParams,
+    params: SignUpParams,
     data?: UserMetadata,
 ): Promise<LoginResponse> {
     const response = await getSupabaseAnonClient().auth.signUp({
-        email: login.email,
-        password: login.password,
-        options: {
-            data: { ...data, role: (data?.role || "customer") as UserRole },
-        },
+        email: params.email,
+        password: params.password,
+        options: { data: { ...data, role: params.role } },
     });
 
     return {
         error: response.error,
-        user: response.data.user == null
-            ? undefined
-            : { ...response.data.user },
-        session: response.data.session == null
-            ? undefined
-            : { ...response.data.session },
+        user: response.data.user,
+        session: response.data.session,
     };
 }
 
@@ -78,12 +70,8 @@ export async function loginWithPassword(
     });
     return {
         error: response.error,
-        user: response.data.user == null
-            ? undefined
-            : { ...response.data.user },
-        session: response.data.session == null
-            ? undefined
-            : { ...response.data.session },
+        user: response.data.user,
+        session: response.data.session,
     };
 }
 
@@ -97,12 +85,8 @@ export async function loginWithSocialToken(
     });
     return {
         error: response.error,
-        user: response.data.user == null
-            ? undefined
-            : { ...response.data.user },
-        session: response.data.session == null
-            ? undefined
-            : { ...response.data.session },
+        user: response.data.user,
+        session: response.data.session,
     };
 }
 
