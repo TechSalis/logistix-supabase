@@ -35,6 +35,15 @@ export async function getOrders(
   return await query;
 }
 
+// export async function getLatestOrder(token: string, userId?: string) {
+//   const query = getSupabaseAnonClient(token).from("Orders")
+//     .select("ref_number,pickup,dropoff,description,order_type")
+//     .eq("user_id", userId)
+//     .order("created_at", { ascending: false })
+//     .limit(1);
+//   return await query;
+// }
+
 export async function getOrderByRefNumber(orderId: string, token: string) {
   return await getSupabaseAnonClient(token).from("Orders")
     .select()
