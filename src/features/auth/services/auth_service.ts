@@ -1,4 +1,4 @@
-import { AuthError } from "https://esm.sh/@supabase/auth-js@2.70.0/dist/module/lib/errors.js";
+import { AuthError } from "https://esm.sh/@supabase/supabase-js@2";
 import { getSupabaseAnonClient } from "../../../core/db/supabase_client.ts";
 import { UserRole } from "../../../core/db/types.ts";
 import { UserMetadata } from "../helpers/auth_interface.ts";
@@ -13,36 +13,38 @@ export type SignUpParams = {
 
 export type LoginResponse = {
     user: Record<string, unknown> | undefined;
-    session?: Record<string, unknown> | undefined;
+    session?: Record<string, unknown>;
     error: AuthError | null;
 };
 
-export async function loginAnonymously(): Promise<LoginResponse> {
-    const response = await getSupabaseAnonClient().auth.signInAnonymously({
-        options: { data: { role: "customer" as unknown as UserRole } },
-    });
+// export async function loginAnonymously(
+//     role: UserRole,
+// ): Promise<LoginResponse> {
+//     const response = await getSupabaseAnonClient().auth.signInAnonymously({
+//         options: { data: { role: role } },
+//     });
 
-    return {
-        error: response.error,
-        user: response.data.user,
-        session: response.data.session,
-    };
-}
+//     return {
+//         error: response.error,
+//         user: { ...response.data.user },
+//         session: { ...response.data.session },
+//     };
+// }
 
-export async function upgradeAnonymousUser(
-    params: SignUpParams,
-    data?: UserMetadata,
-): Promise<LoginResponse> {
-    const response = await getSupabaseAnonClient().auth.updateUser({
-        email: params.email,
-        password: params.password,
-        options: { data: { ...data, role: params.role } },
-    });
-    return {
-        error: response.error,
-        user: response.data.user,
-    };
-}
+// export async function upgradeAnonymousUser(
+//     params: SignUpParams,
+//     data?: UserMetadata,
+// ): Promise<LoginResponse> {
+//     const response = await getSupabaseAnonClient().auth.updateUser({
+//         email: params.email,
+//         password: params.password,
+//         data: { ...data, role: params.role },
+//     });
+//     return {
+//         error: response.error,
+//         user: { ...response.data.user },
+//     };
+// }
 
 export async function signupWithPassword(
     params: SignUpParams,
@@ -56,8 +58,8 @@ export async function signupWithPassword(
 
     return {
         error: response.error,
-        user: response.data.user,
-        session: response.data.session,
+        user: { ...response.data.user },
+        session: { ...response.data.session },
     };
 }
 
@@ -70,8 +72,8 @@ export async function loginWithPassword(
     });
     return {
         error: response.error,
-        user: response.data.user,
-        session: response.data.session,
+        user: { ...response.data.user },
+        session: { ...response.data.session },
     };
 }
 
@@ -85,8 +87,8 @@ export async function loginWithSocialToken(
     });
     return {
         error: response.error,
-        user: response.data.user,
-        session: response.data.session,
+        user: { ...response.data.user },
+        session: { ...response.data.session },
     };
 }
 

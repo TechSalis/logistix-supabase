@@ -1,7 +1,3 @@
-import { urlPathPattern as authSignupPattern } from "./routes/sign_up_email.ts";
-import { urlPathPattern as authLoginPattern } from "./routes/log_in_email.ts";
-import { urlPathPattern as authAnonymousLogin } from "./routes/log_in_anonymous.ts";
-import { urlPathPattern as authAnonymousUpgrade } from "./routes/upgrade_anonymous_user.ts";
 import { notFound } from "@core/functions/http.ts";
 import { LazyRouter } from "@core/lib/lazy_router.ts";
 
@@ -11,19 +7,38 @@ Deno.serve(async (req) => {
 
 const router = new LazyRouter("/auth");
 
-router.on("POST", authAnonymousLogin, async (req) => {
-  const signUp = await import("./routes/log_in_anonymous.ts");
-  return signUp.execute(req);
-});
-router.on("POST", authAnonymousUpgrade, async (req) => {
-  const signUp = await import("./routes/upgrade_anonymous_user.ts");
-  return signUp.execute(req);
-});
+// export const authAnonymousLogin = "/anonymous/login";
+// router.on("POST", authAnonymousLogin, async (req) => {
+//   const handler = await import("./routes/log_in_anonymous.ts");
+//   return handler.execute(req);
+// });
+
+// export const authAnonymousUpgrade = "/anonymous/upgrade";
+// router.on("POST", authAnonymousUpgrade, async (req) => {
+//   const handler = await import("./routes/upgrade_anonymous_user.ts");
+//   return handler.execute(req);
+// });
+
+export const authLoginPattern = "/login";
 router.on("POST", authLoginPattern, async (req) => {
-  const login = await import("./routes/log_in_email.ts");
-  return login.execute(req);
+  const handler = await import("./routes/log_in_email.ts");
+  return handler.execute(req);
 });
+
+export const authLogoutPattern = "/logout";
+router.on("POST", authLoginPattern, async (req, params) => {
+  const handler = (await import("./routes/log_out.ts")).default;
+  return handler.request(req, params);
+});
+
+export const authSignupPattern = "/signup";
 router.on("POST", authSignupPattern, async (req) => {
-  const signUp = await import("./routes/sign_up_email.ts");
-  return signUp.execute(req);
+  const handler = await import("./routes/sign_up_email.ts");
+  return handler.execute(req);
+});
+
+export const authUserPattern = "/user";
+router.on("GET", authLoginPattern, async (req, params) => {
+  const handler = (await import("./routes/get_user_data.ts")).default;
+  return handler.request(req, params);
 });
