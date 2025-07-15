@@ -10,7 +10,6 @@ type AsyncHandler = (
   params: RouteParams,
 ) => Promise<Response>;
 
-
 export class LazyRouter {
   private pathPrefix: string;
   private routes: {
@@ -38,7 +37,7 @@ export class LazyRouter {
         const match = pathPattern.exec(pathname);
 
         if (match) {
-             console.log(
+          console.log(
             request.method,
             request.url,
             "->",

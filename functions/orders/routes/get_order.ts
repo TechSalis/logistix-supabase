@@ -4,10 +4,10 @@ import {
   getOrderById,
   getOrderByRefNumber,
 } from "@features/orders/services/order_service.ts";
-import { handleRequest } from "@core/lib/handle_request.ts";
+import { handleRequest } from "@core/utils/handle_request.ts";
 import validateOrderId from "@core/utils/validators/order_id_validator.ts";
+import { getOrderPattern } from "../index.ts";
 
-export const urlPathPattern = "/get/:orderId";
 export default handleRequest(async ({ token, params }) => {
   try {
     const orderId = params.pathParams.orderId!;
@@ -35,7 +35,7 @@ export default handleRequest(async ({ token, params }) => {
       status: response.status,
     });
   } catch (err) {
-    console.error(urlPathPattern, "error:", err);
+    console.error(getOrderPattern, "error:", err);
     return internalServerError();
   }
 });

@@ -1,10 +1,10 @@
-import { handleRequest } from "@core/lib/handle_request.ts";
+import { handleRequest } from "@core/utils/handle_request.ts";
 import { badRequest, internalServerError } from "@core/functions/http.ts";
 import validateCoordinates from "@core/utils/validators/coordinates_validator.ts";
 import { Coordinates } from "@core/utils/types.ts";
 import { findNearestRiders } from "@features/riders/services/riders_service.ts";
+import { findNearestRidersPattern } from "../index.ts";
 
-export const urlPathPattern = "/nearest";
 
 //?lat=:lat&lng=:lng"
 export default handleRequest(async ({ params, token }) => {
@@ -30,7 +30,7 @@ export default handleRequest(async ({ params, token }) => {
     if (riders) return new Response(JSON.stringify(riders), { status: 200 });
     if (error) return internalServerError(error.message);
   } catch (err) {
-    console.error("findNearestRider RPC failed:", err);
+    console.error(findNearestRidersPattern," RPC error:", err);
   }
   return internalServerError();
 });

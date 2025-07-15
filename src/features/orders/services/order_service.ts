@@ -6,7 +6,7 @@ export async function createOrder(
   token: string,
   { pickup, dropoff, description, extras, order_type }: CreateOrder,
 ) {
-  return await getSupabaseAnonClient(token).from("Orders").insert({
+  return await getSupabaseAnonClient(token).from("orders").insert({
     user_id,
     pickup,
     dropoff,
@@ -23,7 +23,7 @@ export async function getOrders(
   orderTypes?: Array<string>,
   userId?: string,
 ) {
-  let query = getSupabaseAnonClient(token).from("Orders")
+  let query = getSupabaseAnonClient(token).from("orders")
     .select("ref_number,pickup,dropoff,description,order_type")
     .order("created_at", { ascending: false })
     .range(page * limit, (page + 1) * limit);
@@ -45,25 +45,25 @@ export async function getOrders(
 // }
 
 export async function getOrderByRefNumber(orderId: string, token: string) {
-  return await getSupabaseAnonClient(token).from("Orders")
+  return await getSupabaseAnonClient(token).from("orders")
     .select()
     .eq("ref_number", orderId)
     .limit(1);
 }
 export async function getOrderById(orderId: string, token: string) {
-  return await getSupabaseAnonClient(token).from("Orders")
+  return await getSupabaseAnonClient(token).from("orders")
     .select()
     .eq("order_id", orderId)
     .limit(1);
 }
 
 export async function cancelOrderByRefNumber(orderId: string, token: string) {
-  return await getSupabaseAnonClient(token).from("Orders")
+  return await getSupabaseAnonClient(token).from("orders")
     .update({ "status": "cancelled" })
     .eq("ref_number", orderId);
 }
 export async function cancelOrderById(orderId: string, token: string) {
-  return await getSupabaseAnonClient(token).from("Orders")
+  return await getSupabaseAnonClient(token).from("orders")
     .update({ "status": "cancelled" })
     .eq("order_id", orderId);
 }

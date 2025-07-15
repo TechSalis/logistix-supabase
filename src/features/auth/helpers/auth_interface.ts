@@ -1,4 +1,4 @@
-import { AuthError } from "https://esm.sh/@supabase/auth-js@2.70.0/dist/module/lib/errors.js";
+import { AuthError } from "https://esm.sh/@supabase/supabase-js@2";
 import { UserRole } from "../../../core/db/types.ts";
 
 export type UserResponse = {

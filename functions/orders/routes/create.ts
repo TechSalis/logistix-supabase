@@ -2,15 +2,14 @@ import { badRequest, internalServerError } from "@core/functions/http.ts";
 import { createOrder } from "@features/orders/services/order_service.ts";
 import { CreateOrder } from "@features/orders/types.ts";
 import validateCreateOrderParams from "@features/orders/validators/create_order_validator.ts";
-import { handleRequest } from "@core/lib/handle_request.ts";
+import { handleRequest } from "@core/utils/handle_request.ts";
 
-export const urlPathPattern = "";
 export default handleRequest(async ({ req, userId, token }) => {
   let json: CreateOrder;
   try {
     json = await req.json() as CreateOrder;
   } catch (err) {
-    console.error(urlPathPattern, ".json() failed:", err);
+    console.error("CreateOrder .json() failed:", err);
     return badRequest();
   }
 
@@ -30,7 +29,7 @@ export default handleRequest(async ({ req, userId, token }) => {
       },
     );
   } catch (err) {
-    console.error(urlPathPattern, "error:", err);
-    return internalServerError();
+    console.error("CreateOrder error:", err);
   }
+  return internalServerError();
 });

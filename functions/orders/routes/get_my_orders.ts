@@ -1,9 +1,9 @@
-import { handleRequest } from "../../../src/core/lib/handle_request.ts";
+import { handleRequest } from "@core/utils/handle_request.ts";
 import { badRequest, internalServerError } from "@core/functions/http.ts";
 import { getOrders } from "@features/orders/services/order_service.ts";
 import { extractGetOrdersParams } from "@features/orders/validators/get_orders_query_validator.ts";
+import { getMyOrdersPattern } from "../index.ts";
 
-export const urlPathPattern = "/my-orders";
 
 //?page=:page&count=:count&order_types=:orderTypes
 export default handleRequest(async ({ userId, token, params }) => {
@@ -23,7 +23,7 @@ export default handleRequest(async ({ userId, token, params }) => {
       },
     );
   } catch (err) {
-    console.error(urlPathPattern, "error:", err);
+    console.error(getMyOrdersPattern, "error:", err);
     return internalServerError();
   }
 });

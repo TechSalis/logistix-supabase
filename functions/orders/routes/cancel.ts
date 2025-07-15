@@ -1,13 +1,13 @@
 import { badRequest, internalServerError } from "@core/functions/http.ts";
-import { handleRequest } from "@core/lib/handle_request.ts";
+import { handleRequest } from "@core/utils/handle_request.ts";
 import validateOrderId from "@core/utils/validators/order_id_validator.ts";
 import {
   cancelOrderById,
   cancelOrderByRefNumber,
 } from "@features/orders/services/order_service.ts";
 import { uuidRegex } from "@core/utils/validators/uuid_validator.ts";
+import { cancelOrderPattern } from "../index.ts";
 
-export const urlPathPattern = "/cancel/:orderId";
 export default handleRequest(async ({ token, params }) => {
   try {
     const orderId = params.pathParams.orderId!;
@@ -31,7 +31,7 @@ export default handleRequest(async ({ token, params }) => {
       status: response.status,
     });
   } catch (err) {
-    console.error(urlPathPattern, "error:", err);
+    console.error(cancelOrderPattern, "error:", err);
     return internalServerError();
   }
 });
