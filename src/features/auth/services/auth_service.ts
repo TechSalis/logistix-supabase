@@ -96,3 +96,10 @@ export async function getUserFromToken(jwt: string) {
     const response = await getSupabaseAnonClient().auth.getUser(jwt);
     return { user: response.data.user, error: response.error };
 }
+
+export async function logout(token: string) {
+    const response = await getSupabaseAnonClient(token).auth.signOut({
+        scope: "local",
+    });
+    return { error: response.error };
+}
