@@ -7,17 +7,23 @@ Deno.serve(async (req) => {
 
 const router = new LazyRouter("/auth");
 
-// export const authAnonymousLogin = "/anonymous/login";
-// router.on("POST", authAnonymousLogin, async (req) => {
-//   const handler = await import("./routes/log_in_anonymous.ts");
-//   return handler.execute(req);
-// });
+export const authRefreshToken = "/refresh";
+router.on("POST", authRefreshToken, async (req, params) => {
+  const handler = (await import("./routes/refresh_token.ts")).default;
+  return handler.request(req, params);
+});
 
-// export const authAnonymousUpgrade = "/anonymous/upgrade";
-// router.on("POST", authAnonymousUpgrade, async (req) => {
-//   const handler = await import("./routes/upgrade_anonymous_user.ts");
-//   return handler.execute(req);
-// });
+export const authAnonymousLogin = "/anonymous/login";
+router.on("POST", authAnonymousLogin, async (req) => {
+  const handler = await import("./routes/log_in_anonymous.ts");
+  return handler.execute(req);
+});
+
+export const authAnonymousUpgrade = "/anonymous/upgrade";
+router.on("POST", authAnonymousUpgrade, async (req) => {
+  const handler = await import("./routes/upgrade_anonymous_user.ts");
+  return handler.execute(req);
+});
 
 export const authLoginPattern = "/login";
 router.on("POST", authLoginPattern, async (req) => {

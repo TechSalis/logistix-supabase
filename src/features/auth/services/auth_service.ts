@@ -103,3 +103,10 @@ export async function logout(token: string) {
     });
     return { error: response.error };
 }
+
+export async function refreshToken(token: string, refresh_token: string) {
+    const response = await getSupabaseAnonClient(token).auth.refreshSession(
+        { refresh_token },
+    );
+    return { session: response.data.session, error: response.error };
+}
