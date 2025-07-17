@@ -27,8 +27,8 @@ export default handleRequest(async ({ params, token }) => {
       Number(params.queryParams?.count ?? 1),
     );
 
-    if (riders) return new Response(JSON.stringify(riders), { status: 200 });
-    if (error) return internalServerError(error.message);
+    if (riders) return Response.json(riders, { status: 200 });
+    if (error) return Response.json(error, { status: 500 });
   } catch (err) {
     console.error(findNearestRidersPattern," RPC error:", err);
   }

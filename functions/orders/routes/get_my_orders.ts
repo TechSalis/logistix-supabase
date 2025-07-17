@@ -4,20 +4,17 @@ import { getOrders } from "@features/orders/services/order_service.ts";
 import { extractGetOrdersParams } from "@features/orders/validators/get_orders_query_validator.ts";
 import { getMyOrdersPattern } from "../index.ts";
 
-
-//?page=:page&count=:count&order_types=:orderTypes
+//?page=:page&size=:size&order_types=:orderTypes
 export default handleRequest(async ({ userId, token, params }) => {
   try {
-    const { page, count, orderTypes } = extractGetOrdersParams(params);
-    if (page === undefined || count === undefined) {
+    const { page, size, order_types } = extractGetOrdersParams(params);
+    if (page === undefined || size === undefined) {
       return badRequest();
     }
 
-    const response = await getOrders(token, count, page, orderTypes, userId);
-    return new Response(
-      JSON.stringify(
-        response.error ? response.error : response.data ?? "Success",
-      ),
+    const response = await getOrders(token, size, page, order_types, userId);
+    return Response.json(
+      response.error ? response.error : response.data ?? "Success",
       {
         status: response.status,
       },

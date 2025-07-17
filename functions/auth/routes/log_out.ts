@@ -7,8 +7,8 @@ export default handleRequest(async ({ token }) => {
   try {
     const response = await logout(token);
 
-    return new Response(
-      JSON.stringify(response.error ?? "Success"),
+    return Response.json(
+      response.error ?? { message: "Success" },
       { status: response.error?.status ?? 200 },
     );
   } catch (err) {

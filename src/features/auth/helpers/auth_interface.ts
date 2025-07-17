@@ -1,4 +1,5 @@
 import { AuthError } from "https://esm.sh/@supabase/supabase-js@2";
+import { jsonResponseMessage } from "../../../core/functions/http.ts";
 import { UserRole } from "../../../core/db/types.ts";
 
 export type UserResponse = {
@@ -46,9 +47,10 @@ export function mapAuthResponse(auth: {
     error: AuthError | null;
 }) {
     if (auth.error) {
-        return new Response(auth.error.message as string, {
-            status: auth.error.status as number,
-        });
+        return jsonResponseMessage(
+            auth.error.message as string,
+            auth.error.status as number,
+        );
     }
     if (auth.user) {
         const user = mapUser(auth.user as Record<string, unknown>);
@@ -56,6 +58,6 @@ export function mapAuthResponse(auth: {
             ? mapSession(auth.session as Record<string, unknown>)
             : null;
 
-        return new Response(JSON.stringify({ user, session }), { status: 200 });
+        return Response.json({ user, session }, { status: 200 });
     }
 }

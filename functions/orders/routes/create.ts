@@ -14,16 +14,14 @@ export default handleRequest(async ({ req, userId, token }) => {
   }
 
   const validation = await validateCreateOrderParams(json);
-  if (!validation.valid) {
+  if (validation.error) {
     return badRequest(validation.error);
   }
 
   try {
     const response = await createOrder(userId, token, json);
-    return new Response(
-      JSON.stringify(
-        response.error ? response.error : response.data ?? "Success",
-      ),
+    return Response.json(
+      response.error ? response.error : response.data ?? "Success",
       {
         status: response.status,
       },

@@ -21,10 +21,8 @@ export default handleRequest(async ({ req, userId, token }) => {
 
   try {
     const response = await saveFCMToken(fcm_token, userId, token);
-    return new Response(
-      JSON.stringify(
-        response.error ? response.error : response.data ?? "Success",
-      ),
+    return Response.json(
+      response.error ? response.error : response.data ?? { message: "Success" },
       {
         status: response.status,
       },

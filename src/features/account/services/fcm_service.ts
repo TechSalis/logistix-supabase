@@ -52,15 +52,6 @@ export async function validateFcmToken(token: string): Promise<boolean> {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({ registration_ids: [token], dry_run: true }),
-        // body: JSON.stringify({
-        //     message: {
-        //         token: "user_fcm_token",
-        //         notification: {
-        //             title: "Update",
-        //             body: "Something happened",
-        //         },
-        //     },
-        // }),
     });
     const body = await response.json();
     return body.success && !body.failure;
@@ -71,43 +62,47 @@ export type FCMNotification = {
     body: string;
 };
 
-// {
-//   "message": {
-//     "token": "device_fcm_token",
-//     "notification": {
-//       "title": "Hello",
-//       "body": "This is a test notification"
-//     },
-//     "data": {
-//       "order_id": "123",
-//       "type": "new_order"
-//     },
-//     "android": {
-//       "priority": "high",
-//       "notification": {
-//         "sound": "default",
-//         "click_action": "FLUTTER_NOTIFICATION_CLICK"
-//       }
-//     },
-//     "apns": {
-//       "headers": {
-//         "apns-priority": "10"
-//       },
-//       "payload": {
-//         "aps": {
-//           "content-available": 1,
-//           "mutable-content": 1
-//         }
-//       }
-//     },
-//     "webpush": {
-//       "headers": {
-//         "Urgency": "high"
-//       }
-//     }
-//   },
-//   "validate_only": false
-// }
+/**
+ * Example request body:
+ */
+// deno-lint-ignore no-unused-vars
+const FCM_REQUEST_BODY_EXAMPLE = {
+    "message": {
+        "token": "device_fcm_token",
+        "notification": {
+            "title": "Hello",
+            "body": "This is a test notification"
+        },
+        "data": {
+            "order_id": "123",
+            "type": "new_order"
+        },
+        "android": {
+            "priority": "high",
+            "notification": {
+                "sound": "default",
+                "click_action": "FLUTTER_NOTIFICATION_CLICK"
+            }
+        },
+        "apns": {
+            "headers": {
+                "apns-priority": "10"
+            },
+            "payload": {
+                "aps": {
+                    "content-available": 1,
+                    "mutable-content": 1
+                }
+            }
+        },
+        "webpush": {
+            "headers": {
+                "Urgency": "high"
+            }
+        }
+    },
+    "validate_only": false
+} as const;
 
 export async function sendFcmNotification(
     token: string,

@@ -19,6 +19,8 @@ export async function retrieveFCMTokens(
     let query = getSupabaseAnonClient(token).from("fcm_tokens").select(
         "user_id,fcm_token",
     ).in("user_id", user_ids);
+
     if (limit) query = query.limit(limit);
+    
     return await query;
 }

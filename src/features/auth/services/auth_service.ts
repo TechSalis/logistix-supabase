@@ -17,34 +17,34 @@ export type LoginResponse = {
     error: AuthError | null;
 };
 
-// export async function loginAnonymously(
-//     role: UserRole,
-// ): Promise<LoginResponse> {
-//     const response = await getSupabaseAnonClient().auth.signInAnonymously({
-//         options: { data: { role: role } },
-//     });
+export async function loginAnonymously(
+    role: UserRole,
+): Promise<LoginResponse> {
+    const response = await getSupabaseAnonClient().auth.signInAnonymously({
+        options: { data: { role: role } },
+    });
 
-//     return {
-//         error: response.error,
-//         user: { ...response.data.user },
-//         session: { ...response.data.session },
-//     };
-// }
+    return {
+        error: response.error,
+        user: { ...response.data.user },
+        session: { ...response.data.session },
+    };
+}
 
-// export async function upgradeAnonymousUser(
-//     params: SignUpParams,
-//     data?: UserMetadata,
-// ): Promise<LoginResponse> {
-//     const response = await getSupabaseAnonClient().auth.updateUser({
-//         email: params.email,
-//         password: params.password,
-//         data: { ...data, role: params.role },
-//     });
-//     return {
-//         error: response.error,
-//         user: { ...response.data.user },
-//     };
-// }
+export async function upgradeAnonymousUser(
+    params: SignUpParams,
+    data?: UserMetadata,
+): Promise<LoginResponse> {
+    const response = await getSupabaseAnonClient().auth.updateUser({
+        email: params.email,
+        password: params.password,
+        data: { ...data, role: params.role },
+    });
+    return {
+        error: response.error,
+        user: { ...response.data.user },
+    };
+}
 
 export async function signupWithPassword(
     params: SignUpParams,

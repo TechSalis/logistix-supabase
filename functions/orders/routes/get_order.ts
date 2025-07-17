@@ -1,4 +1,8 @@
-import { badRequest, internalServerError } from "@core/functions/http.ts";
+import {
+  badRequest,
+  internalServerError,
+  jsonResponseMessage,
+} from "@core/functions/http.ts";
 import { uuidRegex } from "@core/utils/validators/uuid_validator.ts";
 import {
   getOrderById,
@@ -22,20 +26,20 @@ export default handleRequest(async ({ token, params }) => {
       : await getOrderByRefNumber(orderId, token);
 
     if (response.error) {
-      return new Response(JSON.stringify(response.error), {
+      return Response.json(response.error, {
         status: response.status,
       });
     }
 
     if (response.data.length == 0) {
-      return new Response("Order not found", { status: 404 });
+      return jsonResponseMessage("Order not found", 404);
     }
 
-    return new Response(JSON.stringify(response.data[0]), {
+    return Response.json(response.data[0], {
       status: response.status,
     });
   } catch (err) {
     console.error(getOrderPattern, "error:", err);
-    return internalServerError();
   }
+  return internalServerError();
 });

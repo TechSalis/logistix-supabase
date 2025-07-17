@@ -22,12 +22,12 @@ export default handleRequest(async ({ token, params }) => {
       : await cancelOrderByRefNumber(orderId, token);
 
     if (response.error) {
-      return new Response(JSON.stringify(response.error), {
+      return Response.json(response.error, {
         status: response.status,
       });
     }
 
-    return new Response(JSON.stringify(response.data), {
+    return Response.json(response.data, {
       status: response.status,
     });
   } catch (err) {
