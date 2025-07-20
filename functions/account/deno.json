@@ -1,7 +1,7 @@
 {
   "imports": {
-    "@core/": "../../src/core/",
-    "@utils/": "../../src/core/utils/",
-    "@features/": "../../src/features/"
+    "@core/": "../../../src/core/",
+    "@utils/": "../../../src/core/utils/",
+    "@features/": "../../../src/features/"
   }
 }
