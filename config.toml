@@ -325,7 +325,7 @@ s3_secret_key = "env(S3_SECRET_KEY)"
 [functions.auth]
 enabled = true
 verify_jwt = false
-import_map = "./functions/v1/auth/deno.json"
+import_map = "../import_map.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
 entrypoint = "./functions/v1/auth/index.ts"
@@ -336,7 +336,7 @@ entrypoint = "./functions/v1/auth/index.ts"
 [functions.orders]
 enabled = true
 verify_jwt = true
-import_map = "./functions/v1/orders/deno.json"
+import_map = "../import_map.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
 entrypoint = "./functions/v1/orders/index.ts"
@@ -347,7 +347,7 @@ entrypoint = "./functions/v1/orders/index.ts"
 [functions.riders]
 enabled = true
 verify_jwt = true
-import_map = "./functions/v1/riders/deno.json"
+import_map = "../import_map.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
 entrypoint = "./functions/v1/riders/index.ts"
