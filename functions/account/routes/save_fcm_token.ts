@@ -3,6 +3,7 @@ import { validateFcmToken } from "@features/account/services/fcm_service.ts";
 import { saveFCMToken } from "@features/account/services/account_service.ts";
 import { handleRequest } from "@core/utils/handle_request.ts";
 import { saveFcmToken } from "../index.ts";
+import { error } from "@utils/logger.ts";
 
 export default handleRequest(async ({ req, userId, token }) => {
   try {
@@ -15,12 +16,17 @@ export default handleRequest(async ({ req, userId, token }) => {
       return badRequest("fcm_token is invalid");
     }
   } catch (err) {
-    console.error(saveFcmToken, "validation error:", err);
+    error(`${saveFcmToken} validation error:`, { error: err });
     return internalServerError();
   }
 
   try {
     const response = await saveFCMToken(fcm_token, userId, token);
+
+    if (response.error) {
+      error(`${saveFcmToken} response error:`, { error: response.error });
+    }
+
     return Response.json(
       response.error ? response.error : response.data ?? { message: "Success" },
       {
@@ -28,7 +34,7 @@ export default handleRequest(async ({ req, userId, token }) => {
       },
     );
   } catch (err) {
-    console.error(saveFcmToken, "error:", err);
+    error(`${saveFcmToken} error:`, { error: err });
   }
   return internalServerError();
 });

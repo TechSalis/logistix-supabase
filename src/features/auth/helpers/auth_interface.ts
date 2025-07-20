@@ -20,7 +20,7 @@ export type UserMetadata = {
 export function mapUser(rawUser: Record<string, unknown>): UserResponse {
     return {
         id: rawUser.id as string,
-        is_anonymous: (rawUser.is_anonymous || true) as boolean,
+        is_anonymous: rawUser.is_anonymous as boolean,
         user_metadata: rawUser.user_metadata as UserMetadata,
     };
 }

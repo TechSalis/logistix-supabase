@@ -7,6 +7,7 @@ import {
 } from "@features/orders/services/order_service.ts";
 import { uuidRegex } from "@core/utils/validators/uuid_validator.ts";
 import { cancelOrderPattern } from "../index.ts";
+import { error } from "@utils/logger.ts";
 
 export default handleRequest(async ({ token, params }) => {
   try {
@@ -14,6 +15,9 @@ export default handleRequest(async ({ token, params }) => {
 
     const validation = validateOrderId(orderId);
     if (!validation.valid) {
+      error(`${cancelOrderPattern}validation error`, {
+        error: validation.error,
+      });
       return badRequest(`Invalid order ID: ${orderId}`);
     }
 
@@ -22,16 +26,15 @@ export default handleRequest(async ({ token, params }) => {
       : await cancelOrderByRefNumber(orderId, token);
 
     if (response.error) {
+      error(`${cancelOrderPattern} response error`, { error: response.error });
       return Response.json(response.error, {
         status: response.status,
       });
     }
 
-    return Response.json(response.data, {
-      status: response.status,
-    });
+    return Response.json(response.data, { status: response.status });
   } catch (err) {
-    console.error(cancelOrderPattern, "error:", err);
+    error(`${cancelOrderPattern} error`, { error: err });
     return internalServerError();
   }
 });

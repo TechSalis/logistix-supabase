@@ -13,25 +13,30 @@ export async function createOrder(
     description,
     extras,
     order_type,
-  } as CreateOrder);
+  } as CreateOrder).select("ref_number")
+    .single();
 }
 
 export async function getOrders(
   token: string,
   limit: number = 10,
   page: number = 0,
-  orderTypes?: Array<string>,
+  order_types?: Array<string>,
+  // order_statuses?: Array<string>,
   userId?: string,
 ) {
   let query = getSupabaseAnonClient(token).from("orders")
     .select("ref_number,pickup,dropoff,description,order_type")
     .order("created_at", { ascending: false })
-    .range(page * limit, (page + 1) * limit);
+    .range(page * limit, (page + 1) * limit - 1);
 
   if (userId) query = query.eq("user_id", userId);
-  if (orderTypes && orderTypes?.length > 0) {
-    query = query.in("order_type", orderTypes);
+  if (order_types && order_types?.length > 0) {
+    query = query.in("order_type", order_types);
   }
+  // if (order_statuses && order_statuses?.length > 0) {
+  //   query = query.in("order_status", order_statuses);
+  // }
   return await query;
 }
 

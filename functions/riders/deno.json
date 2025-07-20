@@ -5,6 +5,7 @@
   },
   "imports": {
     "@core/": "../../src/core/",
+    "@utils/": "../../src/core/utils/",
     "@features/": "../../src/features/"
   }
 }

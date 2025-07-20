@@ -11,6 +11,7 @@ import {
 import { handleRequest } from "@core/utils/handle_request.ts";
 import validateOrderId from "@core/utils/validators/order_id_validator.ts";
 import { getOrderPattern } from "../index.ts";
+import { error } from "@utils/logger.ts";
 
 export default handleRequest(async ({ token, params }) => {
   try {
@@ -18,6 +19,7 @@ export default handleRequest(async ({ token, params }) => {
 
     const validation = validateOrderId(orderId);
     if (!validation.valid) {
+      error(`${getOrderPattern} validation error`, { error: validation.error });
       return badRequest(`Invalid order ID: ${orderId}`);
     }
 
@@ -26,12 +28,14 @@ export default handleRequest(async ({ token, params }) => {
       : await getOrderByRefNumber(orderId, token);
 
     if (response.error) {
+      error(`${getOrderPattern} response error`, { error: response.error });
       return Response.json(response.error, {
         status: response.status,
       });
     }
 
     if (response.data.length == 0) {
+      error(`${getOrderPattern} error`, { error: "Order not found" });
       return jsonResponseMessage("Order not found", 404);
     }
 
@@ -39,7 +43,7 @@ export default handleRequest(async ({ token, params }) => {
       status: response.status,
     });
   } catch (err) {
-    console.error(getOrderPattern, "error:", err);
+    error(`${getOrderPattern} error`, { error: err });
   }
   return internalServerError();
 });

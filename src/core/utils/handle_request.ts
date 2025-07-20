@@ -1,6 +1,7 @@
 import type { RouteParams } from "../lib/lazy_router.ts";
 import { internalServerError, unauthorized } from "../functions/http.ts";
 import { getUserIdFromJWT } from "../lib/jwt.ts";
+import { error } from "./logger.ts";
 
 export function handleRequest(
   handler: (data: {
@@ -12,7 +13,6 @@ export function handleRequest(
 ) {
   return {
     async request(req: Request, params: RouteParams): Promise<Response> {
-      console.error("request", "called");
       try {
         const token = req.headers.get("Authorization")!.slice(7);
         const userId = getUserIdFromJWT(token.replace("Bearer ", "").trim());
@@ -21,7 +21,7 @@ export function handleRequest(
 
         return await handler({ req, params, userId, token });
       } catch (err) {
-        console.error("JWT extraction failed:", err);
+        error("JWT extraction failed:", { error: err });
         return internalServerError();
       }
     },

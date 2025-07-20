@@ -4,7 +4,7 @@ import validateCoordinates from "@core/utils/validators/coordinates_validator.ts
 import { Coordinates } from "@core/utils/types.ts";
 import { findNearestRiders } from "@features/riders/services/riders_service.ts";
 import { findNearestRidersPattern } from "../index.ts";
-
+import { error as consoleError } from "@utils/logger.ts";
 
 //?lat=:lat&lng=:lng"
 export default handleRequest(async ({ params, token }) => {
@@ -13,6 +13,9 @@ export default handleRequest(async ({ params, token }) => {
     params.queryParams?.lng,
   );
   if (!validation.valid) {
+    consoleError(`${findNearestRidersPattern} error`, {
+      error: validation.error,
+    });
     return badRequest(validation.error);
   }
 
@@ -28,9 +31,14 @@ export default handleRequest(async ({ params, token }) => {
     );
 
     if (riders) return Response.json(riders, { status: 200 });
-    if (error) return Response.json(error, { status: 500 });
-  } catch (err) {
-    console.error(findNearestRidersPattern," RPC error:", err);
+    if (error) {
+      consoleError(`${findNearestRidersPattern} reponse error`, {
+        error,
+      });
+      return Response.json(error, { status: 500 });
+    }
+  } catch (error) {
+    consoleError(`${findNearestRidersPattern} error`, { error });
   }
   return internalServerError();
 });
