@@ -1,5 +1,5 @@
 import { internalServerError } from "@core/functions/http.ts";
-import { handleAuthLogin } from "../../../src/features/auth/helpers/handle_login.ts";
+import { handleAuthLogin } from "../../../../src/features/auth/helpers/handle_login.ts";
 import { loginWithPassword } from "@features/auth/services/auth_service.ts";
 import { authLoginPattern } from "../index.ts";
 import { error } from "@utils/logger.ts";
