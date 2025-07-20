@@ -3,7 +3,7 @@ import { badRequest, internalServerError } from "@core/functions/http.ts";
 import { getOrders } from "@features/orders/services/order_service.ts";
 import { extractGetOrdersParams } from "@features/orders/validators/get_orders_query_validator.ts";
 import { getMyOrdersPattern } from "../index.ts";
-import { error } from "@utils/logger.ts";
+import { error } from "@core/utils/logger.ts";
 
 //?page=:page&size=:size&order_types=:orderTypes
 export default handleRequest(async ({ userId, token, params }) => {

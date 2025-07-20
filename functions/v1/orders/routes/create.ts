@@ -2,8 +2,8 @@ import { badRequest, internalServerError } from "@core/functions/http.ts";
 import { createOrder } from "@features/orders/services/order_service.ts";
 import { CreateOrder } from "@features/orders/types.ts";
 import validateCreateOrderParams from "@features/orders/validators/create_order_validator.ts";
-import { handleRequest } from "@utils/handle_request.ts";
-import { error } from "@utils/logger.ts";
+import { handleRequest } from "@core/utils/handle_request.ts";
+import { error } from "@core/utils/logger.ts";
 
 export default handleRequest(async ({ req, userId, token }) => {
   let json: CreateOrder;

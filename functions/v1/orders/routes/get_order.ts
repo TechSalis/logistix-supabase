@@ -11,7 +11,7 @@ import {
 import { handleRequest } from "@core/utils/handle_request.ts";
 import validateOrderId from "@core/utils/validators/order_id_validator.ts";
 import { getOrderPattern } from "../index.ts";
-import { error } from "@utils/logger.ts";
+import { error } from "@core/utils/logger.ts";
 
 export default handleRequest(async ({ token, params }) => {
   try {

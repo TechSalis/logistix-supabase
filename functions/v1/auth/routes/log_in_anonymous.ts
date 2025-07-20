@@ -3,7 +3,7 @@ import { loginAnonymously } from "@features/auth/services/auth_service.ts";
 import { mapAuthResponse } from "../../../../src/features/auth/helpers/auth_interface.ts";
 import { authAnonymousLogin } from "../index.ts";
 import { isUserRole, UserRole } from "@core/db/types.ts";
-import { error } from "@utils/logger.ts";
+import { error } from "@core/utils/logger.ts";
 
 export async function execute(req: Request) {
   try {

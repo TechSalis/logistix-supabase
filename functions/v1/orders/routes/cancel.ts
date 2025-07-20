@@ -7,7 +7,7 @@ import {
 } from "@features/orders/services/order_service.ts";
 import { uuidRegex } from "@core/utils/validators/uuid_validator.ts";
 import { cancelOrderPattern } from "../index.ts";
-import { error } from "@utils/logger.ts";
+import { error } from "@core/utils/logger.ts";
 
 export default handleRequest(async ({ token, params }) => {
   try {

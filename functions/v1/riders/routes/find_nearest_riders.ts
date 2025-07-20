@@ -4,7 +4,7 @@ import validateCoordinates from "@core/utils/validators/coordinates_validator.ts
 import { Coordinates } from "@core/utils/types.ts";
 import { findNearestRiders } from "@features/riders/services/riders_service.ts";
 import { findNearestRidersPattern } from "../index.ts";
-import { error as consoleError } from "@utils/logger.ts";
+import { error as consoleError } from "@core/utils/logger.ts";
 
 //?lat=:lat&lng=:lng"
 export default handleRequest(async ({ params, token }) => {

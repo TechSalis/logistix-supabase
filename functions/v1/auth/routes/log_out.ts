@@ -2,7 +2,7 @@ import { internalServerError } from "@core/functions/http.ts";
 import { logout } from "@features/auth/services/auth_service.ts";
 import { authLogoutPattern } from "../index.ts";
 import { handleRequest } from "@core/utils/handle_request.ts";
-import { error } from "@utils/logger.ts";
+import { error } from "@core/utils/logger.ts";
 
 export default handleRequest(async ({ token }) => {
   try {

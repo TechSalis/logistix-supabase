@@ -2,7 +2,7 @@ import { badRequest, internalServerError } from "@core/functions/http.ts";
 import { authRefreshToken } from "../index.ts";
 import { refreshToken } from "@features/auth/services/auth_service.ts";
 import { handleRequest } from "@core/utils/handle_request.ts";
-import { error } from "@utils/logger.ts";
+import { error } from "@core/utils/logger.ts";
 
 export default handleRequest(async ({ req, token }) => {
   try {

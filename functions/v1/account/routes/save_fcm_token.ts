@@ -3,7 +3,7 @@ import { validateFcmToken } from "@features/account/services/fcm_service.ts";
 import { saveFCMToken } from "@features/account/services/account_service.ts";
 import { handleRequest } from "@core/utils/handle_request.ts";
 import { saveFcmToken } from "../index.ts";
-import { error } from "@utils/logger.ts";
+import { error } from "@core/utils/logger.ts";
 
 export default handleRequest(async ({ req, userId, token }) => {
   try {
