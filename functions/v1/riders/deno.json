@@ -1,11 +1,7 @@
 {
+  "importMap": "../../../../import_map.json",
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
     "strict": true
-  },
-  "imports": {
-    "@core/": "../../../../src/core/",
-    "@utils/": "../../../../src/core/utils/",
-    "@features/": "../../../../src/features/"
   }
 }
