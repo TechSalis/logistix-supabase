@@ -1,4 +1,4 @@
-import { handleRequest } from "@core/utils/handle_request.ts";
+import { verifyRequestAuthThen } from "@core/utils/handle_request.ts";
 import { badRequest, internalServerError } from "@core/functions/http.ts";
 import validateCoordinates from "@core/utils/validators/coordinates_validator.ts";
 import { Coordinates } from "@core/utils/types.ts";
@@ -7,7 +7,7 @@ import { findNearestRidersPattern } from "../index.ts";
 import { error as consoleError } from "@core/utils/logger.ts";
 
 //?lat=:lat&lng=:lng"
-export default handleRequest(async ({ params, token }) => {
+export default verifyRequestAuthThen(async ({ params, token }) => {
   const validation = validateCoordinates(
     params.queryParams?.lat,
     params.queryParams?.lng,

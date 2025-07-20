@@ -1,5 +1,5 @@
 import { badRequest, internalServerError } from "@core/functions/http.ts";
-import { handleRequest } from "@core/utils/handle_request.ts";
+import { verifyRequestAuthThen } from "@core/utils/handle_request.ts";
 import validateOrderId from "@core/utils/validators/order_id_validator.ts";
 import {
   cancelOrderById,
@@ -9,7 +9,7 @@ import { uuidRegex } from "@core/utils/validators/uuid_validator.ts";
 import { cancelOrderPattern } from "../index.ts";
 import { error } from "@core/utils/logger.ts";
 
-export default handleRequest(async ({ token, params }) => {
+export default verifyRequestAuthThen(async ({ token, params }) => {
   try {
     const orderId = params.pathParams.orderId!;
 

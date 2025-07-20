@@ -1,11 +1,11 @@
 import { badRequest, internalServerError } from "@core/functions/http.ts";
 import { validateFcmToken } from "@features/account/services/fcm_service.ts";
 import { saveFCMToken } from "@features/account/services/account_service.ts";
-import { handleRequest } from "@core/utils/handle_request.ts";
+import { verifyRequestAuthThen } from "@core/utils/handle_request.ts";
 import { saveFcmToken } from "../index.ts";
 import { error } from "@core/utils/logger.ts";
 
-export default handleRequest(async ({ req, userId, token }) => {
+export default verifyRequestAuthThen(async ({ req, userId, token }) => {
   try {
     var { fcm_token } = await req.json();
 

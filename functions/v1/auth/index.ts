@@ -1,10 +1,6 @@
 import { notFound } from "@core/functions/http.ts";
 import { LazyRouter } from "@core/lib/lazy_router.ts";
 
-Deno.serve(async (req) => {
-  return await router.route(req) || notFound();
-});
-
 const router = new LazyRouter("/auth");
 
 export const authRefreshToken = "/refresh";
@@ -48,3 +44,9 @@ router.on("GET", authLoginPattern, async (req, params) => {
   const handler = (await import("./routes/get_user_data.ts")).default;
   return handler.request(req, params);
 });
+
+export default {
+  async fetch(req: Request): Promise<Response> {
+    return await router.route(req) || notFound();
+  },
+};
