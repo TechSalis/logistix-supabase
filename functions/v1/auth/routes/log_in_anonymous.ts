@@ -8,14 +8,16 @@ import { error } from "@core/utils/logger.ts";
 export async function execute(req: Request) {
   try {
     try {
-      var { role } =  await req.json() as Record<string, unknown>;
+      var { role } = await req.json() as Record<string, unknown>;
     } catch (err) {
-      error(`${authAnonymousLogin} json error:`, { error: err });
+      error(`${authAnonymousLogin} json error:`, null, { error: err });
       return badRequest();
     }
 
     if (!isUserRole(role)) {
-      error(`${authAnonymousLogin} validation error:`, { error: "User role is invalid." });
+      error(`${authAnonymousLogin} validation error:`, null, {
+        error: "User role is invalid.",
+      });
       return badRequest("User role is invalid.");
     }
 
@@ -28,12 +30,14 @@ export async function execute(req: Request) {
     });
 
     if (authService.error) {
-      error(`${authAnonymousLogin} response error:`, { error: authService.error });
+      error(`${authAnonymousLogin} response error:`, null, {
+        error: authService.error,
+      });
     }
 
     if (response) return response;
   } catch (err) {
-      error(`${authAnonymousLogin} error:`, { error: err });
+    error(`${authAnonymousLogin} error:`, null, { error: err });
   }
   return internalServerError();
 }

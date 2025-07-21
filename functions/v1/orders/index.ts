@@ -13,6 +13,9 @@ router.on("POST", "", async (req, params) => {
 //   return getOrders.default.request(req, params);
 // });
 
+/**
+ * page=? size=? order_types=?
+*/
 export const getMyOrdersPattern = "/my-orders";
 router.on("GET", getMyOrdersPattern, async (req, params) => {
   const handler = (await import("./routes/get_my_orders.ts")).default;

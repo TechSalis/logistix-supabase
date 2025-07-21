@@ -9,7 +9,7 @@ export async function execute(req: Request) {
     const response = await handleAuthSignup(req, upgradeAnonymousUser);
     if (response) return response;
   } catch (err) {
-    error(`${authAnonymousUpgrade} error:`, { error: err });
+    error(`${authAnonymousUpgrade} error:`, null, { error: err });
   }
   return internalServerError();
 }

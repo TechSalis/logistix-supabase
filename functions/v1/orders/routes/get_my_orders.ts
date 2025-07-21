@@ -12,7 +12,7 @@ export default verifyRequestAuthThen(async ({ userId, token, params }) => {
       params,
     );
     if (page === undefined || size === undefined) {
-      error(`${getMyOrdersPattern} error`, { error: "invalid page or size" });
+      error(`${getMyOrdersPattern} error`, userId,{ error: "invalid page or size" });
       return badRequest();
     }
 
@@ -29,7 +29,7 @@ export default verifyRequestAuthThen(async ({ userId, token, params }) => {
       { status: response.status },
     );
   } catch (err) {
-    error(`${getMyOrdersPattern}  error:`, { error: err });
+    error(`${getMyOrdersPattern}  error:`, userId,{ error: err });
     return internalServerError();
   }
 });

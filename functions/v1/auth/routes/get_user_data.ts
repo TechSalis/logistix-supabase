@@ -4,12 +4,12 @@ import { authUserPattern } from "../index.ts";
 import { verifyRequestAuthThen } from "@core/utils/handle_request.ts";
 import { error } from "@core/utils/logger.ts";
 
-export default verifyRequestAuthThen(async ({ token }) => {
+export default verifyRequestAuthThen(async ({ userId,token }) => {
   try {
     const response = await getUserFromToken(token);
 
     if (response.error) {
-      error(`${authUserPattern} response error:`, { error: response.error });
+      error(`${authUserPattern} response error:`, userId,{ error: response.error });
     }
 
     return Response.json(
@@ -18,7 +18,7 @@ export default verifyRequestAuthThen(async ({ token }) => {
     );
     
   } catch (err) {
-    error(`${authUserPattern}  error:`, { error: err });
+    error(`${authUserPattern}  error:`,userId, { error: err });
   }
   return internalServerError();
 });

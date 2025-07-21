@@ -9,7 +9,7 @@ export async function execute(req: Request) {
     const response = await handleAuthSignup(req, signupWithPassword);
     if (response) return response;
   } catch (err) {
-    error(`${authSignupPattern} error:`, { error: err });
+    error(`${authSignupPattern} error:`, null,{ error: err });
   }
   return internalServerError();
 }

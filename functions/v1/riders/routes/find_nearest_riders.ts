@@ -6,14 +6,14 @@ import { findNearestRiders } from "@features/riders/services/riders_service.ts";
 import { findNearestRidersPattern } from "../index.ts";
 import { error as consoleError } from "@core/utils/logger.ts";
 
-//?lat=:lat&lng=:lng"
-export default verifyRequestAuthThen(async ({ params, token }) => {
+
+export default verifyRequestAuthThen(async ({ userId, params, token }) => {
   const validation = validateCoordinates(
     params.queryParams?.lat,
     params.queryParams?.lng,
   );
   if (!validation.valid) {
-    consoleError(`${findNearestRidersPattern} error`, {
+    consoleError(`${findNearestRidersPattern} error`, userId, {
       error: validation.error,
     });
     return badRequest(validation.error);
@@ -32,13 +32,13 @@ export default verifyRequestAuthThen(async ({ params, token }) => {
 
     if (riders) return Response.json(riders, { status: 200 });
     if (error) {
-      consoleError(`${findNearestRidersPattern} reponse error`, {
+      consoleError(`${findNearestRidersPattern} reponse`, userId, {
         error,
       });
       return Response.json(error, { status: 500 });
     }
-  } catch (error) {
-    consoleError(`${findNearestRidersPattern} error`, { error });
+  } catch (err) {
+    consoleError(`${findNearestRidersPattern}`, userId, { error: err });
   }
   return internalServerError();
 });

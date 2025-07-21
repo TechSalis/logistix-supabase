@@ -16,7 +16,7 @@ export default verifyRequestAuthThen(async ({ req, userId, token }) => {
       return badRequest("fcm_token is invalid");
     }
   } catch (err) {
-    error(`${saveFcmToken} validation error:`, { error: err });
+    error(`${saveFcmToken} validation error:`, userId, { error: err });
     return internalServerError();
   }
 
@@ -24,7 +24,9 @@ export default verifyRequestAuthThen(async ({ req, userId, token }) => {
     const response = await saveFCMToken(fcm_token, userId, token);
 
     if (response.error) {
-      error(`${saveFcmToken} response error:`, { error: response.error });
+      error(`${saveFcmToken} response error:`, userId, {
+        error: response.error,
+      });
     }
 
     return Response.json(
@@ -34,7 +36,7 @@ export default verifyRequestAuthThen(async ({ req, userId, token }) => {
       },
     );
   } catch (err) {
-    error(`${saveFcmToken} error:`, { error: err });
+    error(`${saveFcmToken} error:`, userId, { error: err });
   }
   return internalServerError();
 });

@@ -9,13 +9,13 @@ import { uuidRegex } from "@core/utils/validators/uuid_validator.ts";
 import { cancelOrderPattern } from "../index.ts";
 import { error } from "@core/utils/logger.ts";
 
-export default verifyRequestAuthThen(async ({ token, params }) => {
+export default verifyRequestAuthThen(async ({ userId, token, params }) => {
   try {
     const orderId = params.pathParams.orderId!;
 
     const validation = validateOrderId(orderId);
     if (!validation.valid) {
-      error(`${cancelOrderPattern}validation error`, {
+      error(`${cancelOrderPattern}validation error`, userId,{
         error: validation.error,
       });
       return badRequest(`Invalid order ID: ${orderId}`);
@@ -26,7 +26,7 @@ export default verifyRequestAuthThen(async ({ token, params }) => {
       : await cancelOrderByRefNumber(orderId, token);
 
     if (response.error) {
-      error(`${cancelOrderPattern} response error`, { error: response.error });
+      error(`${cancelOrderPattern} response error`, userId,{ error: response.error });
       return Response.json(response.error, {
         status: response.status,
       });
@@ -34,7 +34,7 @@ export default verifyRequestAuthThen(async ({ token, params }) => {
 
     return Response.json(response.data, { status: response.status });
   } catch (err) {
-    error(`${cancelOrderPattern} error`, { error: err });
+    error(`${cancelOrderPattern} error`,userId, { error: err });
     return internalServerError();
   }
 });

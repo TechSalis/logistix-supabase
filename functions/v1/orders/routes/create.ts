@@ -10,14 +10,14 @@ export default verifyRequestAuthThen(async ({ req, userId, token }) => {
   try {
     json = await req.json() as CreateOrder;
   } catch (err) {
-    error("create order json extraction", { error: err });
+    error("create order json extraction", userId,{ error: err });
     console.error("CreateOrder .json() failed:", err);
     return badRequest();
   }
 
   const validation = await validateCreateOrderParams(json);
   if (validation.error) {
-    error("create order validation error", { error: validation.error });
+    error("create order validation error",userId, { error: validation.error });
     return badRequest(validation.error);
   }
 
@@ -25,7 +25,7 @@ export default verifyRequestAuthThen(async ({ req, userId, token }) => {
     const response = await createOrder(userId, token, json);
     
     if (response.error) {
-      error("create order response error", { error: response.error });
+      error("create order response error",userId, { error: response.error });
     }
 
     return Response.json(
@@ -35,7 +35,7 @@ export default verifyRequestAuthThen(async ({ req, userId, token }) => {
       },
     );
   } catch (err) {
-    error("create order error", { error: err });
+    error("create order error",userId, { error: err });
   }
   return internalServerError();
 });

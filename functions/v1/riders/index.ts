@@ -3,7 +3,9 @@ import { LazyRouter } from "@core/lib/lazy_router.ts";
 
 const router = new LazyRouter('/riders');
 
-/// Consider sorting Alphabetically and utilizing a better-than-linear search algorithm
+/**
+lat=? lng=?
+*/
 export const findNearestRidersPattern = "/nearest";
 router.on('GET', findNearestRidersPattern, async (req, params) => {
     const handler = (await import('./routes/find_nearest_riders.ts')).default;
