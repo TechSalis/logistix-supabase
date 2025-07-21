@@ -12,6 +12,7 @@ export default verifyRequestAuthThen(async ({ userId, params, token }) => {
     params.queryParams?.lat,
     params.queryParams?.lng,
   );
+
   if (!validation.valid) {
     consoleError(`${findNearestRidersPattern} error`, userId, {
       error: validation.error,
@@ -31,6 +32,7 @@ export default verifyRequestAuthThen(async ({ userId, params, token }) => {
     );
 
     if (riders) return Response.json(riders, { status: 200 });
+    
     if (error) {
       consoleError(`${findNearestRidersPattern} reponse`, userId, {
         error,
