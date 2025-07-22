@@ -31,9 +31,7 @@ export default verifyRequestAuthThen(async ({ req, userId, token }) => {
 
     return Response.json(
       response.error ? response.error : response.data ?? { message: "Success" },
-      {
-        status: response.status,
-      },
+      { status: response.status },
     );
   } catch (err) {
     error(`${saveFcmToken} error:`, userId, { error: err });

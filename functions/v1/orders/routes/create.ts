@@ -10,7 +10,7 @@ export default verifyRequestAuthThen(async ({ req, userId, token }) => {
   try {
     json = await req.json() as CreateOrder;
   } catch (err) {
-    error("create order json extraction", userId,{ error: err });
+    error("create order json", userId,{ error: err });
     console.error("CreateOrder .json() failed:", err);
     return badRequest();
   }

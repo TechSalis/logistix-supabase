@@ -43,7 +43,7 @@ default_pool_size = 20
 max_client_conn = 100
 
 # [db.vault]
-# secret_key = "env(SECRET_VALUE)"
+# name = "env(key)"
 
 [db.migrations]
 # If disabled, migrations will be skipped during a db push or reset.
@@ -329,6 +329,17 @@ import_map = "../import_map.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
 entrypoint = "./functions/v1/auth/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/v1/login-password/*.html" ]
+
+[functions.account]
+enabled = true
+verify_jwt = true
+import_map = "../import_map.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/v1/account/index.ts"
 # Specifies static files to be bundled with the function. Supports glob patterns.
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/v1/login-password/*.html" ]
