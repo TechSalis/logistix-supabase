@@ -11,6 +11,15 @@ export async function saveFCMToken(
     });
 }
 
+export async function deleteFCMToken(
+    fcm_token: string,
+    user_id: string,
+    token: string,
+) {
+    return await getSupabaseAnonClient(token).from("fcm_tokens").delete()
+    .eq("fcm_token", fcm_token).eq("user_id", user_id);
+}
+
 export async function retrieveFCMTokens(
     user_ids: string[],
     token: string,
@@ -21,6 +30,6 @@ export async function retrieveFCMTokens(
     ).in("user_id", user_ids);
 
     if (limit) query = query.limit(limit);
-    
+
     return await query;
 }

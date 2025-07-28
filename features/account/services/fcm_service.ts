@@ -40,7 +40,7 @@ async function getAccessToken(): Promise<string> {
     return tokenJson.access_token;
 }
 
-const url = "https://fcm.googleapis.com/v1/projects/logistix-83bee";
+const url = Deno.env.get("FCM_API_URL");
 
 export async function validateFcmToken(token: string): Promise<boolean> {
     const accessToken = await getAccessToken();
@@ -51,13 +51,12 @@ export async function validateFcmToken(token: string): Promise<boolean> {
             Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ registration_ids: [token], dry_run: true }),
+        body: JSON.stringify({ message: { token }, validate_only: false }),
     });
-    const body = await response.json();
-    return body.success && !body.failure;
+    return response.ok;
 }
 
-export type FCMNotification = {
+type FCMNotification = {
     title: string;
     body: string;
 };
@@ -71,37 +70,37 @@ const FCM_REQUEST_BODY_EXAMPLE = {
         "token": "device_fcm_token",
         "notification": {
             "title": "Hello",
-            "body": "This is a test notification"
+            "body": "This is a test notification",
         },
         "data": {
             "order_id": "123",
-            "type": "new_order"
+            "type": "new_order",
         },
         "android": {
             "priority": "high",
             "notification": {
                 "sound": "default",
-                "click_action": "FLUTTER_NOTIFICATION_CLICK"
-            }
+                "click_action": "FLUTTER_NOTIFICATION_CLICK",
+            },
         },
         "apns": {
             "headers": {
-                "apns-priority": "10"
+                "apns-priority": "10",
             },
             "payload": {
                 "aps": {
                     "content-available": 1,
-                    "mutable-content": 1
-                }
-            }
+                    "mutable-content": 1,
+                },
+            },
         },
         "webpush": {
             "headers": {
-                "Urgency": "high"
-            }
-        }
+                "Urgency": "high",
+            },
+        },
     },
-    "validate_only": false
+    "validate_only": false,
 } as const;
 
 export async function sendFcmNotification(
