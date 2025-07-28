@@ -15,7 +15,7 @@ export default verifyRequestAuthThen(async ({ userId, token, params }) => {
 
     const validation = validateOrderId(orderId);
     if (!validation.valid) {
-      error(`${cancelOrderPattern}validation error`, userId,{
+      error(`${cancelOrderPattern} validation error`, userId,{
         error: validation.error,
       });
       return badRequest(`Invalid order ID: ${orderId}`);

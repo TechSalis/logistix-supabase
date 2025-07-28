@@ -67,6 +67,7 @@ export async function cancelOrderByRefNumber(orderId: string, token: string) {
     .update({ "status": "cancelled" })
     .eq("ref_number", orderId);
 }
+
 export async function cancelOrderById(orderId: string, token: string) {
   return await getSupabaseAnonClient(token).from("orders")
     .update({ "status": "cancelled" })

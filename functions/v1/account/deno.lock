@@ -1,0 +1,7 @@
+{
+  "version": "5",
+  "remote": {
+    "https://esm.sh/@supabase/postgrest-js@1.19.4/dist/cjs/types.js": "1700ad573e1a6faf0c2ff26b538aa517554943b0ea38d2c5b3801a034aae1cfe",
+    "https://esm.sh/@supabase/postgrest-js@1.19.4/es2022/dist/cjs/types.mjs": "f16cdd719c3964845c848a02c0e40875b453b5cc8a403ecdafe5efa9775a3d3c"
+  }
+}
