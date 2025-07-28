@@ -6,7 +6,6 @@ import { findNearestRiders } from "@features/riders/services/riders_service.ts";
 import { findNearestRidersPattern } from "../index.ts";
 import { error as consoleError } from "@core/utils/logger.ts";
 
-
 export default verifyRequestAuthThen(async ({ userId, params, token }) => {
   const validation = validateCoordinates(
     params.queryParams?.lat,
@@ -15,7 +14,7 @@ export default verifyRequestAuthThen(async ({ userId, params, token }) => {
 
   if (!validation.valid) {
     consoleError(`${findNearestRidersPattern} error`, userId, {
-      error: validation.error,
+      validation,
     });
     return badRequest(validation.error);
   }
@@ -25,19 +24,21 @@ export default verifyRequestAuthThen(async ({ userId, params, token }) => {
     lng: Number(params.queryParams!.lng),
   };
   try {
-    const { riders, error } = await findNearestRiders(
+    const response = await findNearestRiders(
       coordinates,
       token,
       Number(params.queryParams?.count ?? 1),
     );
 
-    if (riders) return Response.json(riders, { status: 200 });
-    
-    if (error) {
+    if (response.data) {
+      return Response.json({ riders: response.data }, { status: 200 });
+    }
+
+    if (response.error) {
       consoleError(`${findNearestRidersPattern} reponse`, userId, {
-        error,
+        response,
       });
-      return Response.json(error, { status: 500 });
+      return Response.json(response.error, { status: response.status });
     }
   } catch (err) {
     consoleError(`${findNearestRidersPattern}`, userId, { error: err });
