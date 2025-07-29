@@ -10,8 +10,8 @@ router.on('GET', findNearestRidersPattern, async (req, params) => {
 });
 
 export const acceptOrderPattern = "/accept-order/:orderId";
-router.on('GET', findNearestRidersPattern, async (req, params) => {
-    const handler = (await import('./routes/find_nearest_riders.ts')).default;
+router.on('POST', acceptOrderPattern, async (req, params) => {
+    const handler = (await import('./routes/accept_order.ts')).default;
     return handler.request(req, params);
 });
 

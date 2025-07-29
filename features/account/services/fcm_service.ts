@@ -108,8 +108,10 @@ export async function sendFcmNotification(
     notification: FCMNotification,
     data?: Record<string, string>,
 ) {
+    console.log(token);
     const accessToken = await getAccessToken();
 
+    console.log(accessToken);
     const response = await fetch(`${url}/messages:send`, {
         method: "POST",
         headers: {
@@ -120,7 +122,10 @@ export async function sendFcmNotification(
             message: { token: token, notification, data },
         }),
     });
+
+    console.log(response);
     const body = await response.json();
+    console.log(body);
     return { success: body.name !== null, error: body.error };
 }
 

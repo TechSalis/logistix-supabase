@@ -13,7 +13,7 @@ export async function createOrder(
     description,
     extras,
     order_type,
-  } as CreateOrder).select("ref_number")
+  } as CreateOrder).select("order_id,ref_number")
     .single();
 }
 
@@ -25,13 +25,14 @@ export async function getOrders(
   // order_statuses?: Array<string>,
   userId?: string,
 ) {
-  let query = getSupabaseAnonClient(token).from("orders")
-    .select("ref_number,pickup,dropoff,description,order_type")
+  let query = getSupabaseAnonClient(token).from("orders_with_status_view")
+    .select('*')
     .order("created_at", { ascending: false })
     .range(page * limit, (page + 1) * limit - 1);
 
   if (userId) query = query.eq("user_id", userId);
-  if (order_types && order_types?.length > 0) {
+
+  if (order_types && order_types.length > 0) {
     query = query.in("order_type", order_types);
   }
   // if (order_statuses && order_statuses?.length > 0) {
@@ -42,34 +43,35 @@ export async function getOrders(
 
 // export async function getLatestOrder(token: string, userId?: string) {
 //   const query = getSupabaseAnonClient(token).from("Orders")
-//     .select("ref_number,pickup,dropoff,description,order_type")
+//     .select("order_id,ref_number,pickup,dropoff,description,order_type")
 //     .eq("user_id", userId)
 //     .order("created_at", { ascending: false })
 //     .limit(1);
 //   return await query;
 // }
 
-export async function getOrderByRefNumber(orderId: string, token: string) {
-  return await getSupabaseAnonClient(token).from("orders")
-    .select()
-    .eq("ref_number", orderId)
-    .limit(1);
-}
+// export async function getOrderByRefNumber(orderId: string, token: string) {
+//   return await getSupabaseAnonClient(token).from("orders")
+//     .select()
+//     .eq("ref_number", orderId)
+//     .limit(1);
+// }
+
 export async function getOrderById(orderId: string, token: string) {
-  return await getSupabaseAnonClient(token).from("orders")
+  return await getSupabaseAnonClient(token).from("orders_with_status_view")
     .select()
     .eq("order_id", orderId)
     .limit(1);
 }
 
-export async function cancelOrderByRefNumber(orderId: string, token: string) {
-  return await getSupabaseAnonClient(token).from("orders")
-    .update({ "status": "cancelled" })
-    .eq("ref_number", orderId);
-}
+// export async function cancelOrderByRefNumber(orderId: string, token: string) {
+//   return await getSupabaseAnonClient(token).from("orders")
+//     .update({ "status": "cancelled" })
+//     .eq("ref_number", orderId);
+// }
 
 export async function cancelOrderById(orderId: string, token: string) {
-  return await getSupabaseAnonClient(token).from("orders")
+  return await getSupabaseAnonClient(token).from("orders_status")
     .update({ "status": "cancelled" })
     .eq("order_id", orderId);
 }
