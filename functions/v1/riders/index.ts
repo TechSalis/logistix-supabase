@@ -9,9 +9,15 @@ router.on('GET', findNearestRidersPattern, async (req, params) => {
     return handler.request(req, params);
 });
 
-export const acceptOrderPattern = "/accept-order/:orderId";
+export const acceptOrderPattern = "/accept-order/:order_id";
 router.on('POST', acceptOrderPattern, async (req, params) => {
     const handler = (await import('./routes/accept_order.ts')).default;
+    return handler.request(req, params);
+});
+
+export const getRiderPattern = "/get/:user_id";
+router.on('GET', getRiderPattern, async (req, params) => {
+    const handler = (await import('./routes/get_rider.ts')).default;
     return handler.request(req, params);
 });
 

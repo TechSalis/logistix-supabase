@@ -1,5 +1,4 @@
 import { getSupabaseAnonClient } from "../../../../core/db/supabase_client.ts";
-import { OrderStatus } from "../../../../core/db/types.ts";
 import type { Coordinates } from "../../../../core/utils/types.ts";
 
 export function findNearestRiders(
@@ -16,19 +15,12 @@ export function findNearestRiders(
   ).limit(count);
 }
 
-export async function acceptDelivery(
-  rider_id: string,
-  order_id: string,
+export function getRider(
+  user_id: string,
   token: string,
 ) {
-  const user_id = await getSupabaseAnonClient(token).from("orders")
-    .select("user_id").eq("order_id", order_id).single();
-
-  return getSupabaseAnonClient(token).from("orders_status")
-    .insert({
-      order_id,
-      rider_id,
-      user_id: user_id.data?.user_id,
-      status: OrderStatus.Accepted,
-    });
+  return getSupabaseAnonClient(token).from("riders_view").select().eq(
+    "user_id",
+    user_id,
+  ).maybeSingle();
 }

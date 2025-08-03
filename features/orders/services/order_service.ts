@@ -1,4 +1,5 @@
 import { getSupabaseAnonClient } from "../../../../core/db/supabase_client.ts";
+import { OrderStatus } from "../../../../core/db/types.ts";
 import { CreateOrder } from "../types.ts";
 
 export async function createOrder(
@@ -25,8 +26,8 @@ export async function getOrders(
   // order_statuses?: Array<string>,
   userId?: string,
 ) {
-  let query = getSupabaseAnonClient(token).from("orders_with_status_view")
-    .select('*')
+  let query = getSupabaseAnonClient(token).from("orders_view")
+    .select("*")
     .order("created_at", { ascending: false })
     .range(page * limit, (page + 1) * limit - 1);
 
@@ -58,7 +59,7 @@ export async function getOrders(
 // }
 
 export async function getOrderById(orderId: string, token: string) {
-  return await getSupabaseAnonClient(token).from("orders_with_status_view")
+  return await getSupabaseAnonClient(token).from("orders_view")
     .select()
     .eq("order_id", orderId)
     .limit(1);
@@ -74,4 +75,28 @@ export async function cancelOrderById(orderId: string, token: string) {
   return await getSupabaseAnonClient(token).from("orders_status")
     .update({ "status": "cancelled" })
     .eq("order_id", orderId);
+}
+
+export async function acceptOrder(
+  rider_id: string,
+  order_id: string,
+  token: string,
+) {
+  const client = getSupabaseAnonClient(token);
+  const getUser = await client.from("orders")
+    .select("user_id").eq("order_id", order_id).single();
+
+  if (getUser.error) return getUser;
+
+  const insert = await client.from("orders_status")
+    .insert({
+      order_id,
+      rider_id,
+      user_id: getUser.data?.user_id,
+      status: OrderStatus.accepted,
+    });
+
+  if (insert.error) return insert;
+
+  return getUser;
 }

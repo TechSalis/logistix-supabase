@@ -2,7 +2,7 @@ import { badRequest, internalServerError, notFound } from "@core/functions/http.
 import { validateFcmToken } from "@features/account/services/fcm_service.ts";
 import { saveFCMToken, deleteFCMToken } from "@features/account/services/account_service.ts";
 import { verifyRequestAuthThen } from "@core/utils/handle_request.ts";
-import { saveFcmToken } from "../index.ts";
+import { fcmToken } from "../index.ts";
 import { error } from "@core/utils/logger.ts";
 import { PostgrestSingleResponse } from "https://esm.sh/@supabase/postgrest-js@1.19.4/dist/cjs/types.js";
 
@@ -17,7 +17,7 @@ export default verifyRequestAuthThen(async ({ req, userId, token }) => {
       return badRequest("fcm_token is invalid");
     }
   } catch (err) {
-    error(`${saveFcmToken} validation error:`, userId, { error: err });
+    error(`${fcmToken} validation error:`, userId, { error: err });
     return internalServerError();
   }
 
@@ -35,7 +35,7 @@ export default verifyRequestAuthThen(async ({ req, userId, token }) => {
     }
 
     if (response.error) {
-      error(`${saveFcmToken} response error:`, userId, {
+      error(`${fcmToken} response error:`, userId, {
         error: response.error,
       });
     }
@@ -45,7 +45,7 @@ export default verifyRequestAuthThen(async ({ req, userId, token }) => {
       { status: response.status },
     );
   } catch (err) {
-    error(`${saveFcmToken} error:`, userId, { error: err });
+    error(`${fcmToken} error:`, userId, { error: err });
   }
   return internalServerError();
 });

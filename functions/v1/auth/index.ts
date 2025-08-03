@@ -28,7 +28,7 @@ router.on("POST", authLoginPattern, async (req) => {
 });
 
 export const authLogoutPattern = "/logout";
-router.on("POST", authLoginPattern, async (req, params) => {
+router.on("POST", authLogoutPattern, async (req, params) => {
   const handler = (await import("./routes/log_out.ts")).default;
   return handler.request(req, params);
 });
@@ -40,7 +40,7 @@ router.on("POST", authSignupPattern, async (req) => {
 });
 
 export const authUserPattern = "/user";
-router.on("GET", authLoginPattern, async (req, params) => {
+router.on("GET", authUserPattern, async (req, params) => {
   const handler = (await import("./routes/get_user_data.ts")).default;
   return handler.request(req, params);
 });

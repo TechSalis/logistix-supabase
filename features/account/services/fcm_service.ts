@@ -1,4 +1,6 @@
 import { createJwt } from "../../../../core/lib/jwt.ts";
+import { FCMData, FCMNotification } from "../utils/fcm.ts";
+import { getFCMToken } from "./account_service.ts";
 
 const serviceAccount = JSON.parse(
     atob(Deno.env.get("GOOGLE_SERVICE_ACCOUNT")!),
@@ -42,7 +44,7 @@ async function getAccessToken(): Promise<string> {
 
 const url = Deno.env.get("FCM_API_URL");
 
-export async function validateFcmToken(token: string): Promise<boolean> {
+export async function validateFcmToken(fcm_token: string): Promise<boolean> {
     const accessToken = await getAccessToken();
 
     const response = await fetch(`${url}/messages:send`, {
@@ -51,87 +53,14 @@ export async function validateFcmToken(token: string): Promise<boolean> {
             Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: { token }, validate_only: false }),
+        body: JSON.stringify({ message: { token: fcm_token }, validate_only: false }),
     });
     return response.ok;
 }
 
-type FCMNotification = {
-    title: string;
-    body: string;
-};
-
-/**
- * Example request body:
- */
-// deno-lint-ignore no-unused-vars
-const FCM_REQUEST_BODY_EXAMPLE = {
-    "message": {
-        "token": "device_fcm_token",
-        "notification": {
-            "title": "Hello",
-            "body": "This is a test notification",
-        },
-        "data": {
-            "order_id": "123",
-            "type": "new_order",
-        },
-        "android": {
-            "priority": "high",
-            "notification": {
-                "sound": "default",
-                "click_action": "FLUTTER_NOTIFICATION_CLICK",
-            },
-        },
-        "apns": {
-            "headers": {
-                "apns-priority": "10",
-            },
-            "payload": {
-                "aps": {
-                    "content-available": 1,
-                    "mutable-content": 1,
-                },
-            },
-        },
-        "webpush": {
-            "headers": {
-                "Urgency": "high",
-            },
-        },
-    },
-    "validate_only": false,
-} as const;
-
 export async function sendFcmNotification(
-    token: string,
-    notification: FCMNotification,
-    data?: Record<string, string>,
-) {
-    console.log(token);
-    const accessToken = await getAccessToken();
-
-    console.log(accessToken);
-    const response = await fetch(`${url}/messages:send`, {
-        method: "POST",
-        headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            message: { token: token, notification, data },
-        }),
-    });
-
-    console.log(response);
-    const body = await response.json();
-    console.log(body);
-    return { success: body.name !== null, error: body.error };
-}
-
-export async function sendFcmData(
-    token: string,
-    data?: Record<string, string>,
+    fcm_token: string,
+    message: { notification: FCMNotification; data?: FCMData },
 ) {
     const accessToken = await getAccessToken();
 
@@ -143,8 +72,8 @@ export async function sendFcmData(
         },
         body: JSON.stringify({
             message: {
-                token: token,
-                data,
+                token: fcm_token,
+                ...message,
                 "apns": {
                     "payload": {
                         "aps": {
@@ -158,6 +87,50 @@ export async function sendFcmData(
             },
         }),
     });
+
     const body = await response.json();
     return { success: body.name !== null, error: body.error };
 }
+
+export async function sendFcmNotificationToUser(
+    user_id: string,
+    message: { notification: FCMNotification; data?: FCMData },
+    token: string,
+) {
+    const fcm = await getFCMToken(user_id, token);
+    if (fcm.error) return fcm;
+    return sendFcmNotification(fcm.token, message);
+}
+
+// export async function sendFcmData(
+//     token: string,
+//     data: FCMData,
+// ) {
+//     const accessToken = await getAccessToken();
+
+//     const response = await fetch(`${url}/messages:send`, {
+//         method: "POST",
+//         headers: {
+//             Authorization: `Bearer ${accessToken}`,
+//             "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({
+//             message: {
+//                 token: token,
+//                 data,
+//                 "apns": {
+//                     "payload": {
+//                         "aps": {
+//                             "content-available": 1,
+//                         },
+//                     },
+//                 },
+//                 "android": {
+//                     "priority": "high",
+//                 },
+//             },
+//         }),
+//     });
+//     const body = await response.json();
+//     return { success: body.name !== null, error: body.error };
+// }

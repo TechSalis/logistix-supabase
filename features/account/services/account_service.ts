@@ -42,5 +42,7 @@ export async function getFCMToken(
         "fcm_token",
     ).eq("user_id", user_id).order("created_at", { ascending: false }).limit(1);
 
-    return { ...query, token: query.data?.[0].fcm_token };
+    console.log(query);
+    if (query.error) return query;
+    return { token: query.data.at(0)!.fcm_token, error: null };
 }
