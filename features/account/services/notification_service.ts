@@ -1,4 +1,6 @@
 import { getSupabaseAnonClient } from "../../../../core/db/supabase_client.ts";
+import { FCMData, FCMNotification } from "../utils/fcm.ts";
+import { sendFcmNotification } from "./fcm_service.ts";
 
 export async function saveFCMToken(
     fcm_token: string,
@@ -42,7 +44,19 @@ export async function getFCMToken(
         "fcm_token",
     ).eq("user_id", user_id).order("created_at", { ascending: false }).limit(1);
 
-    console.log(query);
     if (query.error) return query;
-    return { token: query.data.at(0)!.fcm_token, error: null };
+    return { fcm_token: query.data.at(0)!.fcm_token, error: null };
+}
+
+export async function sendFcmNotificationToUser(
+    user_id: string,
+    message: { notification: FCMNotification; data?: FCMData },
+    token: string,
+    thread_id?: string,
+) {
+    const fcm = await getFCMToken(user_id, token);
+
+    if (fcm.error) return { error: fcm.error, success: false };
+
+    return sendFcmNotification(fcm.fcm_token, message, thread_id);
 }

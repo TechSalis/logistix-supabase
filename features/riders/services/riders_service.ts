@@ -15,10 +15,7 @@ export function findNearestRiders(
   ).limit(count);
 }
 
-export function getRider(
-  user_id: string,
-  token: string,
-) {
+export function getRider(user_id: string, token: string) {
   return getSupabaseAnonClient(token).from("riders_view").select().eq(
     "user_id",
     user_id,

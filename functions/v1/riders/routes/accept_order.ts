@@ -1,7 +1,7 @@
 import { verifyRequestAuthThen } from "@core/utils/handle_request.ts";
 import { badRequest, internalServerError } from "@core/functions/http.ts";
 import { acceptOrderPattern } from "../index.ts";
-import { sendFcmNotificationToUser } from "@features/account/services/fcm_service.ts";
+import { sendFcmNotificationToUser } from "@features/account/services/notification_service.ts";
 import { acceptOrder } from "@features/orders/services/order_service.ts";
 import { error as consoleError } from "@core/utils/logger.ts";
 import validateOrderId from "@core/utils/validators/order_id_validator.ts";

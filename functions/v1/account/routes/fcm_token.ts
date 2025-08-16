@@ -1,6 +1,6 @@
 import { badRequest, internalServerError, notFound } from "@core/functions/http.ts";
 import { validateFcmToken } from "@features/account/services/fcm_service.ts";
-import { saveFCMToken, deleteFCMToken } from "@features/account/services/account_service.ts";
+import { saveFCMToken, deleteFCMToken } from "@features/account/services/notification_service.ts";
 import { verifyRequestAuthThen } from "@core/utils/handle_request.ts";
 import { fcmToken } from "../index.ts";
 import { error } from "@core/utils/logger.ts";
@@ -13,7 +13,7 @@ export default verifyRequestAuthThen(async ({ req, userId, token }) => {
     if (fcm_token == undefined || fcm_token == null) {
       return badRequest("fcm_token is required");
     }
-    if (typeof fcm_token !== "string" || !(await validateFcmToken(fcm_token))) {
+    if (typeof fcm_token !== "string" || !await validateFcmToken(fcm_token)) {
       return badRequest("fcm_token is invalid");
     }
   } catch (err) {
@@ -38,11 +38,16 @@ export default verifyRequestAuthThen(async ({ req, userId, token }) => {
       error(`${fcmToken} response error:`, userId, {
         error: response.error,
       });
+
+      return Response.json(
+        response.error ,
+        { status: response.error?.status },
+      );
     }
 
     return Response.json(
-      response.error ? response.error : response.data ?? { message: "Success" },
-      { status: response.status },
+      response.data ?? { message: "Success" },
+      { status: 200 },
     );
   } catch (err) {
     error(`${fcmToken} error:`, userId, { error: err });

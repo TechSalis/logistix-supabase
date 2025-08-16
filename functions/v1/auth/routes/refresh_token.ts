@@ -15,8 +15,7 @@ export default verifyRequestAuthThen(async ({ userId, req, token }) => {
 
     if (
       refresh_token == undefined || refresh_token == null ||
-      typeof refresh_token !== "string" || refresh_token == "null" ||
-      refresh_token.length == 0
+      typeof refresh_token !== "string" || refresh_token.length == 0
     ) {
       error(`${authRefreshToken} validation error:`, userId, {
         error: "A valid refresh_token is required",

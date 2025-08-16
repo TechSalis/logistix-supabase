@@ -1,6 +1,5 @@
 import { createJwt } from "../../../../core/lib/jwt.ts";
 import { FCMData, FCMNotification } from "../utils/fcm.ts";
-import { getFCMToken } from "./account_service.ts";
 
 const serviceAccount = JSON.parse(
     atob(Deno.env.get("GOOGLE_SERVICE_ACCOUNT")!),
@@ -53,7 +52,10 @@ export async function validateFcmToken(fcm_token: string): Promise<boolean> {
             Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: { token: fcm_token }, validate_only: false }),
+        body: JSON.stringify({
+            message: { token: fcm_token },
+            validate_only: false,
+        }),
     });
     return response.ok;
 }
@@ -61,6 +63,7 @@ export async function validateFcmToken(fcm_token: string): Promise<boolean> {
 export async function sendFcmNotification(
     fcm_token: string,
     message: { notification: FCMNotification; data?: FCMData },
+    thread_id?: string,
 ) {
     const accessToken = await getAccessToken();
 
@@ -74,15 +77,26 @@ export async function sendFcmNotification(
             message: {
                 token: fcm_token,
                 ...message,
-                "apns": {
-                    "payload": {
-                        "aps": {
-                            "content-available": 1,
+                apns: {
+                    headers: {
+                        // 10 = immediate; 5 = background
+                        "apns-priority": "10",
+                        // "apns-expiration": `${
+                        //     Math.floor((Date.now() + 30_000) / 1000)
+                        // }`,
+                    },
+                    payload: {
+                        aps: {
+                            contentAvailable: 1,
+                            threadId: thread_id,
                         },
                     },
                 },
-                "android": {
-                    "priority": "high",
+                android: {
+                    priority: "HIGH",
+                    ttl: "30s",
+                    notification: { channel_id: "high_importance" },
+                    collapse_key: thread_id,
                 },
             },
         }),
@@ -92,15 +106,6 @@ export async function sendFcmNotification(
     return { success: body.name !== null, error: body.error };
 }
 
-export async function sendFcmNotificationToUser(
-    user_id: string,
-    message: { notification: FCMNotification; data?: FCMData },
-    token: string,
-) {
-    const fcm = await getFCMToken(user_id, token);
-    if (fcm.error) return fcm;
-    return sendFcmNotification(fcm.token, message);
-}
 
 // export async function sendFcmData(
 //     token: string,

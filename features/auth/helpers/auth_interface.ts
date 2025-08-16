@@ -49,7 +49,7 @@ export function mapAuthResponse(auth: {
     if (auth.error) {
         return jsonResponseMessage(
             auth.error.message as string,
-            auth.error.status as number,
+            Number(auth.error.status ?? 500),
         );
     }
     if (auth.user) {
