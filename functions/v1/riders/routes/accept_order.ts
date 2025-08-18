@@ -3,7 +3,7 @@ import { badRequest, internalServerError } from "@core/functions/http.ts";
 import { acceptOrderPattern } from "../index.ts";
 import { sendFcmNotificationToUser } from "@features/account/services/notification_service.ts";
 import { acceptOrder } from "@features/orders/services/order_service.ts";
-import { error as consoleError } from "@core/utils/logger.ts";
+import { error } from "@core/utils/logger.ts";
 import validateOrderId from "@core/utils/validators/order_id_validator.ts";
 import { FCMEvent, FCMSource } from "@features/account/utils/fcm.ts";
 import { OrderStatus } from "@core/db/types.ts";
@@ -14,7 +14,7 @@ export default verifyRequestAuthThen(async ({ params, userId, token }) => {
 
     const validation = validateOrderId(order_id);
     if (!validation.valid) {
-      consoleError(`${acceptOrderPattern} validation error`, userId, {
+      error(`${acceptOrderPattern} validation error`, userId, {
         validation,
       });
       return badRequest(`Invalid order ID: ${order_id}`);
@@ -23,7 +23,7 @@ export default verifyRequestAuthThen(async ({ params, userId, token }) => {
     const accepted = await acceptOrder(userId, order_id, token);
 
     if (accepted.error) {
-      consoleError(`${acceptOrderPattern} response`, userId, {
+      error(`${acceptOrderPattern} response`, userId, {
         accepted,
       });
       return Response.json(accepted.error, { status: accepted.status });
@@ -47,12 +47,12 @@ export default verifyRequestAuthThen(async ({ params, userId, token }) => {
       token,
     )
       .catch((err) => {
-        consoleError(`${acceptOrderPattern} fcm`, userId, { error: err });
+        error(`${acceptOrderPattern} fcm`, userId, { error: err });
       });
 
     return Response.json(accepted.data, { status: accepted.status });
   } catch (err) {
-    consoleError(`${acceptOrderPattern}`, userId, { error: err });
+    error(`${acceptOrderPattern}`, userId, { error: err });
   }
   return internalServerError();
 });

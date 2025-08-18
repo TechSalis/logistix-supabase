@@ -15,8 +15,7 @@ export async function handleAuthSignup(
     ) => Promise<LoginResponse>,
 ) {
     try {
-        var json = await req.json() as Record<string, unknown>;
-        var { email, password, role, metadata } = json;
+        var { email, password, role, metadata } = await req.json();
     } catch (_) {
         return badRequest();
     }

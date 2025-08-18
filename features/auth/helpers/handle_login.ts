@@ -11,12 +11,11 @@ export async function handleAuthLogin(
     service: (login: LoginParams) => Promise<LoginResponse>,
 ) {
     try {
-        var json = await req.json() as Record<string, unknown>;
-        var { email, password } = json;
+        var { email, password } = await req.json();
     } catch (_) {
         return badRequest();
     }
-    
+
     const validationError = validateAuthLoginInput(email, password);
     if (!validationError.valid) {
         return badRequest(validationError.error);

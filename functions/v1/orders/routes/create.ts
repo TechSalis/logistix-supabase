@@ -6,26 +6,25 @@ import { verifyRequestAuthThen } from "@core/utils/handle_request.ts";
 import { error } from "@core/utils/logger.ts";
 
 export default verifyRequestAuthThen(async ({ req, userId, token }) => {
-  let json: CreateOrder;
   try {
-    json = await req.json() as CreateOrder;
+    var json: CreateOrder = await req.json();
   } catch (err) {
-    error("create order json", userId,{ error: err });
+    error("create order json", userId, { error: err });
     console.error("CreateOrder .json() failed:", err);
     return badRequest();
   }
 
   const validation = await validateCreateOrderParams(json);
   if (validation.error) {
-    error("create order validation error",userId, { error: validation.error });
+    error("create order validation error", userId, { error: validation.error });
     return badRequest(validation.error);
   }
 
   try {
     const response = await createOrder(userId, token, json);
-    
+
     if (response.error) {
-      error("create order response error",userId, { error: response.error });
+      error("create order response error", userId, { error: response.error });
     }
 
     return Response.json(
@@ -35,7 +34,7 @@ export default verifyRequestAuthThen(async ({ req, userId, token }) => {
       },
     );
   } catch (err) {
-    error("create order error",userId, { error: err });
+    error("create order error", userId, { error: err });
   }
   return internalServerError();
 });

@@ -8,7 +8,7 @@ import { error } from "@core/utils/logger.ts";
 export async function execute(req: Request) {
   try {
     try {
-      var { role } = await req.json() as Record<string, unknown>;
+      var { role } = await req.json();
     } catch (err) {
       error(`${authAnonymousLogin} json error:`, null, { error: err });
       return badRequest();

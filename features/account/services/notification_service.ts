@@ -22,20 +22,6 @@ export async function deleteFCMToken(
         .eq("fcm_token", fcm_token).eq("user_id", user_id);
 }
 
-export async function getFCMTokens(
-    user_ids: string[],
-    token: string,
-    limit?: number,
-) {
-    let query = getSupabaseAnonClient(token).from("fcm_tokens").select(
-        "fcm_token",
-    ).in("user_id", user_ids).order("created_at", { ascending: false });
-
-    if (limit) query = query.limit(limit);
-
-    return await query;
-}
-
 export async function getFCMToken(
     user_id: string,
     token: string,
@@ -47,6 +33,20 @@ export async function getFCMToken(
     if (query.error) return query;
     return { fcm_token: query.data.at(0)!.fcm_token, error: null };
 }
+
+// export async function getFCMTokens(
+//     user_ids: string[],
+//     token: string,
+//     limit?: number,
+// ) {
+//     let query = getSupabaseAnonClient(token).from("fcm_tokens").select(
+//         "fcm_token",
+//     ).in("user_id", user_ids).order("created_at", { ascending: false });
+
+//     if (limit) query = query.limit(limit);
+
+//     return await query;
+// }
 
 export async function sendFcmNotificationToUser(
     user_id: string,

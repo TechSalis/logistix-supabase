@@ -41,7 +41,7 @@ export default verifyRequestAuthThen(async ({ req, userId, token }) => {
 
       return Response.json(
         response.error ,
-        { status: response.error?.status },
+        { status: response.status },
       );
     }
 

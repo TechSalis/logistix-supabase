@@ -7,7 +7,7 @@ import { error } from "@core/utils/logger.ts";
 export default verifyRequestAuthThen(async ({ userId, req, token }) => {
   try {
     try {
-      var { refresh_token } = await req.json() as Record<string, unknown>;
+      var { refresh_token } = await req.json();
     } catch (_) {
       error(`${authRefreshToken} json error:`, userId);
       return badRequest();

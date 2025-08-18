@@ -106,7 +106,6 @@ export async function sendFcmNotification(
     return { success: body.name !== null, error: body.error };
 }
 
-
 // export async function sendFcmData(
 //     token: string,
 //     data: FCMData,
