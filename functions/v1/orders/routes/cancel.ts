@@ -1,6 +1,6 @@
 import { badRequest, internalServerError } from "@core/functions/http.ts";
 import { verifyRequestAuthThen } from "@core/utils/handle_request.ts";
-import validateOrderId from "@core/utils/validators/order_id_validator.ts";
+import { validateOrderId } from "../../../../../core/utils/validators/order_validator.ts";
 import { cancelOrderById } from "@features/orders/services/order_service.ts";
 import { cancelOrderPattern } from "../index.ts";
 import { error } from "@core/utils/logger.ts";

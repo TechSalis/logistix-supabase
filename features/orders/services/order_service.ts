@@ -51,12 +51,12 @@ export async function getOrders(
 //   return await query;
 // }
 
-// export async function getOrderByRefNumber(orderId: string, token: string) {
-//   return await getSupabaseAnonClient(token).from("orders")
-//     .select()
-//     .eq("ref_number", orderId)
-//     .limit(1);
-// }
+export async function getOrderByRefNumber(ref_number: string, token: string) {
+  return await getSupabaseAnonClient(token).from("orders_view")
+    .select()
+    .eq("ref_number", ref_number)
+    .limit(1);
+}
 
 export async function getOrderById(orderId: string, token: string) {
   return await getSupabaseAnonClient(token).from("orders_view")

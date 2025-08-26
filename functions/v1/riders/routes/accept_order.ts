@@ -4,7 +4,7 @@ import { acceptOrderPattern } from "../index.ts";
 import { sendFcmNotificationToUser } from "@features/account/services/notification_service.ts";
 import { acceptOrder } from "@features/orders/services/order_service.ts";
 import { error } from "@core/utils/logger.ts";
-import validateOrderId from "@core/utils/validators/order_id_validator.ts";
+import { validateOrderId } from "../../../../../core/utils/validators/order_validator.ts";
 import { FCMEvent, FCMSource } from "@features/account/utils/fcm.ts";
 import { OrderStatus } from "@core/db/types.ts";
 

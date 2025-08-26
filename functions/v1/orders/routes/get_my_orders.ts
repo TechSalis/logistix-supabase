@@ -11,6 +11,7 @@ export default verifyRequestAuthThen(async ({ userId, token, params }) => {
     const { page, size, order_types } = extractGetOrdersParams(
       params,
     );
+
     if (page === undefined || size === undefined) {
       error(`${getMyOrdersPattern} error`, userId,{ error: "invalid page or size" });
       return badRequest();

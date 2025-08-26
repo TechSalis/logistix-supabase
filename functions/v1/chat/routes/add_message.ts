@@ -13,6 +13,7 @@ export default verifyRequestAuthThen(async ({ req, userId, token }) => {
   } catch {
     return badRequest("Invalid JSON body.");
   }
+  
   try {
     if (!validateId(message.sender_id).valid) {
       return badRequest("'sender_id' is invalid");
@@ -42,7 +43,7 @@ export default verifyRequestAuthThen(async ({ req, userId, token }) => {
       );
     }
 
-    const user = await getUserProfile(message.recipient_id, token);
+    const user = await getUserProfile(userId, token);
     await sendFcmNotificationToUser(
       message.recipient_id,
       {

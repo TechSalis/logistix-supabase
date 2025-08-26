@@ -34,6 +34,13 @@ router.on("POST", cancelOrderPattern, async (req, params) => {
   return handler.request(req, params);
 });
 
+export const searchOrderPattern = "/search";
+router.on("GET", searchOrderPattern, async (req, params) => {
+  const handler = (await import("./routes/search_orders.ts")).default;
+  return handler.request(req, params);
+});
+
+
 export default {
   async fetch(req: Request): Promise<Response> {
     return await router.route(req) || notFound();

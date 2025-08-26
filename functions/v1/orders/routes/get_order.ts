@@ -1,11 +1,11 @@
 import {
   badRequest,
   internalServerError,
-  jsonResponseMessage,
+  notFound,
 } from "@core/functions/http.ts";
 import { getOrderById } from "@features/orders/services/order_service.ts";
 import { verifyRequestAuthThen } from "@core/utils/handle_request.ts";
-import validateOrderId from "@core/utils/validators/order_id_validator.ts";
+import {validateOrderId} from "@core/utils/validators/order_validator.ts";
 import { getOrderPattern } from "../index.ts";
 import { error } from "@core/utils/logger.ts";
 
@@ -34,7 +34,7 @@ export default verifyRequestAuthThen(async ({ userId, token, params }) => {
 
     if (response.data.length == 0) {
       error(`${getOrderPattern} error`, userId, { error: "Order not found" });
-      return jsonResponseMessage("Order not found", 404);
+      return notFound("Order not found");
     }
 
     return Response.json(response.data[0], {
