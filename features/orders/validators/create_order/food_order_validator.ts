@@ -10,9 +10,6 @@ type FoodOrderInput = {
 export default function validateOrderInput(data: FoodOrderInput): ValidatorResponse {
   let errorMessage = '';
 
-  if (!data.pickup || !isRecord(data.pickup)) {
-    errorMessage += 'Pickup location is required.';
-  }
   if (!data.dropoff || !isRecord(data.dropoff)) {
     errorMessage += ' Dropoff location is required.';
   }

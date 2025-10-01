@@ -9,10 +9,7 @@ export default async function validateCreateOrderParams(
     return (await import("./create_order/food_order_validator.ts")).default(
       json,
     );
-  } else if (
-    order_type === "delivery" || order_type === "errands" ||
-    order_type === "grocery"
-  ) {
+  } else if (order_type === "delivery" || order_type === "errands") {
     return (await import("./create_order/delivery_order_validator.ts")).default(
       json,
     );

@@ -9,17 +9,17 @@ router.on("POST", authRefreshToken, async (req, params) => {
   return handler.request(req, params);
 });
 
-export const authAnonymousLogin = "/anonymous/login";
-router.on("POST", authAnonymousLogin, async (req) => {
-  const handler = await import("./routes/log_in_anonymous.ts");
-  return handler.execute(req);
-});
+// export const authAnonymousLogin = "/anonymous/login";
+// router.on("POST", authAnonymousLogin, async (req) => {
+//   const handler = await import("./routes/log_in_anonymous.ts");
+//   return handler.execute(req);
+// });
 
-export const authAnonymousUpgrade = "/anonymous/upgrade";
-router.on("POST", authAnonymousUpgrade, async (req) => {
-  const handler = await import("./routes/upgrade_anonymous_user.ts");
-  return handler.execute(req);
-});
+// export const authAnonymousUpgrade = "/anonymous/upgrade";
+// router.on("POST", authAnonymousUpgrade, async (req) => {
+//   const handler = await import("./routes/upgrade_anonymous_user.ts");
+//   return handler.execute(req);
+// });
 
 export const authLoginPattern = "/login";
 router.on("POST", authLoginPattern, async (req) => {

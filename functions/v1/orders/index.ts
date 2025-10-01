@@ -7,6 +7,10 @@ router.on("POST", "", async (req, params) => {
   const createOrder = await import("./routes/create.ts");
   return createOrder.default.request(req, params);
 });
+router.on("POST", "/bulk", async (req, params) => {
+  const createOrder = await import("./routes/create_bulk.ts");
+  return createOrder.default.request(req, params);
+});
 
 // router.on("GET", "", async (req, params) => {
 //   const getOrders = await import("./routes/get_orders.ts");

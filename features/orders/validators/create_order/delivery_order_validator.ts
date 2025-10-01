@@ -12,7 +12,6 @@ export default function validateOrderInput(
   data: DeliveryOrderInput,
 ): ValidatorResponse {
   let errorMessage = "";
-
   if (
     !data.pickup || !isRecord(data.pickup)
   ) {

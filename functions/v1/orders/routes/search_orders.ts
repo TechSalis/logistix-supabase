@@ -19,12 +19,12 @@ export default verifyRequestAuthThen(async ({ userId, token, params }) => {
     let response;
 
     if (validateRefNumber(search).valid) {
-    if (search.startsWith("#")) search = search.slice(1);
+      if (search.startsWith("#")) search = search.slice(1);
       response = await getOrderByRefNumber(search, token);
     }
 
     if (!response) {
-      return badRequest(`Invalid search: ${search}`);
+      return notFound(`Invalid search: ${search}`);
     }
 
     if (response.error) {
